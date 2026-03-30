@@ -132,4 +132,4 @@ print(session.execute("SELECT release_version FROM system.local").one())
 
 ## Next
 
-[03-data-modeling-essentials.md](03-data-modeling-essentials.md) — modeling on `events`. Then [04](04-masterless-peers-and-placement.md) → [05](05-cap-and-tunable-consistency.md). Full path: [../README.md](../README.md#learning-path).
+[03-masterless-peers-and-placement.md](03-masterless-peers-and-placement.md) — placement and the ring. Full path: [../README.md](../README.md#learning-path).

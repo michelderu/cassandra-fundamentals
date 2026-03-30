@@ -1,8 +1,8 @@
-# 06 — Gossip and topology awareness
+# 05 — Gossip and topology awareness
 
 Topics: **gossip protocol**, **snitches**, **multi-DC ideas** (this lab stays **single DC**).
 
-**Previous:** [05-cap-and-tunable-consistency.md](05-cap-and-tunable-consistency.md). **Next:** [07-storage-engine-write-through-read.md](07-storage-engine-write-through-read.md).
+**Previous:** [04-cap-and-tunable-consistency.md](04-cap-and-tunable-consistency.md). **Next:** [06-storage-engine-write-through-read.md](06-storage-engine-write-through-read.md).
 
 ---
 
@@ -68,4 +68,4 @@ docker exec cassandra-1 cat /etc/cassandra/cassandra.yaml | grep -E '^endpoint_s
 
 ## Next
 
-[07-storage-engine-write-through-read.md](07-storage-engine-write-through-read.md)
+[06-storage-engine-write-through-read.md](06-storage-engine-write-through-read.md)

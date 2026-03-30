@@ -1,8 +1,8 @@
-# 08 — Self-healing (hints & repair), LWT, summary
+# 07 — Self-healing (hints & repair), LWT, summary
 
 Topics: **hinted handoff**, **read repair**, **anti-entropy repair**, **lightweight transactions (Paxos)**, **architect summary**.
 
-**Previous:** [07-storage-engine-write-through-read.md](07-storage-engine-write-through-read.md).
+**Previous:** [06-storage-engine-write-through-read.md](06-storage-engine-write-through-read.md).
 
 ---
 

@@ -68,8 +68,7 @@ Check [DataStax documentation](https://docs.datastax.com/) for current HCD and A
 ## Next
 
 1. [02-lab-environment.md](02-lab-environment.md) — start the cluster; create `lab_ks` and `events`
-2. [03-data-modeling-essentials.md](03-data-modeling-essentials.md) — partition and clustering keys
-3. [04-masterless-peers-and-placement.md](04-masterless-peers-and-placement.md) — token placement
-4. [05-cap-and-tunable-consistency.md](05-cap-and-tunable-consistency.md) — CAP and consistency levels
+2. [03-masterless-peers-and-placement.md](03-masterless-peers-and-placement.md) — token placement
+3. [04-cap-and-tunable-consistency.md](04-cap-and-tunable-consistency.md) — CAP and consistency levels
 
-Then continue with [06-gossip-and-topology.md](06-gossip-and-topology.md).
+Then continue with [05-gossip-and-topology.md](05-gossip-and-topology.md).

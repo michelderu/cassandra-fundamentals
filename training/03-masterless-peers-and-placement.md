@@ -1,8 +1,8 @@
-# 04 — Masterless architecture, peers, and data placing
+# 03 — Masterless architecture, peers, and data placing
 
 Topics: **masterless topology**, **peers not masters**, **consistent hashing / vNodes / replication**.
 
-**Previous:** [03-data-modeling-essentials.md](03-data-modeling-essentials.md). **Next:** [05-cap-and-tunable-consistency.md](05-cap-and-tunable-consistency.md).
+**Previous:** [02-lab-environment.md](02-lab-environment.md). **Next:** [04-cap-and-tunable-consistency.md](04-cap-and-tunable-consistency.md).
 
 ---
 
@@ -107,4 +107,4 @@ docker exec cassandra-1 nodetool ring lab_ks
 
 ## Next
 
-[05-cap-and-tunable-consistency.md](05-cap-and-tunable-consistency.md)
+[04-cap-and-tunable-consistency.md](04-cap-and-tunable-consistency.md)
