@@ -1,0 +1,74 @@
+# Apache Cassandra training cluster — 3 nodes, RF=3 capable, single datacenter.
+# Requires Docker with Compose v2+.
+
+services:
+  cassandra-1:
+    image: cassandra:5.0
+    container_name: cassandra-1
+    hostname: cassandra-1
+    ports:
+      - "9042:9042"
+    environment: &cassandra-env
+      CASSANDRA_CLUSTER_NAME: training-lab
+      CASSANDRA_SEEDS: cassandra-1
+      MAX_HEAP_SIZE: 512M
+      HEAP_NEWSIZE: 128M
+    volumes:
+      - cassandra-1-data:/var/lib/cassandra
+    networks:
+      - cassandra-net
+    healthcheck:
+      test: ["CMD-SHELL", "nodetool status | grep -q UN"]
+      interval: 15s
+      timeout: 10s
+      retries: 12
+      start_period: 90s
+
+  cassandra-2:
+    image: cassandra:5.0
+    container_name: cassandra-2
+    hostname: cassandra-2
+    environment:
+      <<: *cassandra-env
+    volumes:
+      - cassandra-2-data:/var/lib/cassandra
+    networks:
+      - cassandra-net
+    depends_on:
+      cassandra-1:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "nodetool status | grep -q UN"]
+      interval: 15s
+      timeout: 10s
+      retries: 12
+      start_period: 90s
+
+  cassandra-3:
+    image: cassandra:5.0
+    container_name: cassandra-3
+    hostname: cassandra-3
+    environment:
+      <<: *cassandra-env
+    volumes:
+      - cassandra-3-data:/var/lib/cassandra
+    networks:
+      - cassandra-net
+    depends_on:
+      cassandra-1:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "nodetool status | grep -q UN"]
+      interval: 15s
+      timeout: 10s
+      retries: 12
+      start_period: 90s
+
+networks:
+  cassandra-net:
+    driver: bridge
+
+volumes:
+  cassandra-1-data:
+  cassandra-2-data:
+  cassandra-3-data:
