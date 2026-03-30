@@ -2,8 +2,6 @@
 
 Topics: **hinted handoff**, **read repair**, **anti-entropy repair**, **lightweight transactions (Paxos)**, **architect summary**.
 
-Infographics: [§13](../assets/image-b5f792eb-a5bb-4a89-9dea-7eeae0ea40b7.png) · [§14](../assets/image-0d007069-3093-4d8b-8421-705578190309.png) · [§15](../assets/image-e62b7935-dd49-4f58-b603-4ab0c1081926.png)
-
 ---
 
 ## 13. Self-healing: hints and repairs
@@ -108,16 +106,3 @@ Without running new commands, write a short answer for each:
 2. What does **RF=3** plus **QUORUM** read+write imply about overlap?
 3. Name two mechanisms that move data toward consistency **without** a client read.
 
----
-
-## Suggested study order (full course)
-
-1. Masterless → Peers → Data placing  
-2. CAP → Tunable consistency  
-3. Gossip → Topology  
-4. Write path → Memory to disk → Read path → Compaction → Tombstones  
-5. Self-healing → LWT → Summary  
-
----
-
-You can return to the single-file narrative: [../TRAINING.md](../TRAINING.md)

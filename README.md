@@ -56,11 +56,4 @@ docker compose down -v
 | Storage engine: write path → reads, compaction, tombstones | [training/05-storage-engine-write-through-read.md](training/05-storage-engine-write-through-read.md) |
 | Self-healing, LWT, summary | [training/06-self-healing-lwt-and-summary.md](training/06-self-healing-lwt-and-summary.md) |
 
-Infographics live under [assets/](assets/). The monolithic copy of the narrative is kept in [TRAINING.md](TRAINING.md) as a single-file reference; **labs live in the `training/` modules.**
-
-## Suggested order
-
-1. [01-lab-environment.md](training/01-lab-environment.md)  
-2. [02](training/02-masterless-peers-and-placement.md) → [03](training/03-cap-and-tunable-consistency.md) → [04](training/04-gossip-and-topology.md)  
-3. [05](training/05-storage-engine-write-through-read.md)  
-4. [06](training/06-self-healing-lwt-and-summary.md)
+Thanks to **David Leconte** for the architecture diagrams and images used in the training modules.

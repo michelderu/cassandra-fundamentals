@@ -2,8 +2,6 @@
 
 Topics: **LSM write path**, **memtable → SSTable flush**, **read path (Bloom, merge)**, **compaction strategies**, **tombstones**.
 
-Infographics: [§8](../assets/image-af54af2e-6dcd-4c94-b8c6-be15a5c9d57e.png) · [§9](../assets/image-2516a5a1-c80a-4d45-8be1-0ad0db3b8687.png) · [§10](../assets/image-f4939ea8-2734-4575-831e-3f07a64ffc89.png) · [§11](../assets/image-ff5b07da-cf6f-4804-8106-1b70cfbeda51.png) · [§12](../assets/image-f20bbdcb-968f-4733-bb80-b2daa32ea736.png)
-
 ---
 
 ## 8. Write path

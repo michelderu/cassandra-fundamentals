@@ -2,8 +2,6 @@
 
 Topics: **gossip protocol**, **snitches**, **multi-DC ideas** (this lab stays **single DC**).
 
-Infographics: [§6](../assets/image-c1a5cd48-098a-43e4-9700-3eb682083291.png) · [§7](../assets/image-8f5cb0e9-7bbe-4042-96d3-89ea5b9b5167.png)
-
 ---
 
 ## 6. Gossip

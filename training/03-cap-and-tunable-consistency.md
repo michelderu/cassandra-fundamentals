@@ -2,8 +2,6 @@
 
 Topics: **CAP / AP framing**, **consistency levels**, **R + W > RF** intuition.
 
-Infographics: [§4](../assets/image-7cb027ae-0cb8-4f54-8b07-8b410d7dc519.png) · [§5](../assets/image-d77b744f-ffc6-4cd0-8d60-2bfd5ae3224b.png)
-
 ---
 
 ## 4. CAP theorem

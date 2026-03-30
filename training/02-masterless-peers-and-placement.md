@@ -2,8 +2,6 @@
 
 Topics: **masterless topology**, **peers not masters**, **consistent hashing / vNodes / replication**.
 
-Infographics: [§1](../assets/image-30783e4d-ea27-45db-bc9e-34d773c4fba1.png) · [§2](../assets/image-7ffc3696-aeb7-479e-a9c8-ffdd0c2cd141.png) · [§3](../assets/image-26ac843d-61e6-4016-b7ae-f3a7d0474e4d.png)
-
 ---
 
 ## 1. Masterless architecture
