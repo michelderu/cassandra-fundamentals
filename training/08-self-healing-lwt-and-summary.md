@@ -1,6 +1,8 @@
-# 06 — Self-healing (hints & repair), LWT, summary
+# 08 — Self-healing (hints & repair), LWT, summary
 
 Topics: **hinted handoff**, **read repair**, **anti-entropy repair**, **lightweight transactions (Paxos)**, **architect summary**.
+
+**Previous:** [07-storage-engine-write-through-read.md](07-storage-engine-write-through-read.md).
 
 ---
 
@@ -105,4 +107,10 @@ Without running new commands, write a short answer for each:
 1. Why is the cluster **masterless**?
 2. What does **RF=3** plus **QUORUM** read+write imply about overlap?
 3. Name two mechanisms that move data toward consistency **without** a client read.
+
+---
+
+## Next
+
+End of the core sequence. See the [course overview](../README.md) to revisit any module.
 

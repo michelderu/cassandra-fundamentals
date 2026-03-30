@@ -1,6 +1,8 @@
-# 03 — CAP theorem and tunable consistency
+# 05 — CAP theorem and tunable consistency
 
 Topics: **CAP / AP framing**, **consistency levels**, **R + W > RF** intuition.
+
+**Previous:** [04-masterless-peers-and-placement.md](04-masterless-peers-and-placement.md). **Next:** [06-gossip-and-topology.md](06-gossip-and-topology.md).
 
 ---
 
@@ -93,4 +95,4 @@ If you are comfortable:
 
 ## Next
 
-[04-gossip-and-topology.md](04-gossip-and-topology.md)
+[06-gossip-and-topology.md](06-gossip-and-topology.md)

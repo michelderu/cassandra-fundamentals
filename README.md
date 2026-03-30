@@ -1,6 +1,23 @@
 # Cassandra fundamentals — training and labs
 
-Hands-on material for Apache Cassandra architecture concepts, with a **three-node** local cluster via Docker Compose.
+Hands-on material for Apache Cassandra architecture concepts, using a **three-node** local cluster via Docker Compose.
+
+## Learning path
+
+| Module | File |
+|--------|------|
+| 01 — Fundamentals and deployment | [training/01-fundamentals-and-deployment.md](training/01-fundamentals-and-deployment.md) |
+| 02 — Lab environment | [training/02-lab-environment.md](training/02-lab-environment.md) |
+| 03 — Data modeling essentials | [training/03-data-modeling-essentials.md](training/03-data-modeling-essentials.md) |
+| 04 — Masterless, peers, placement | [training/04-masterless-peers-and-placement.md](training/04-masterless-peers-and-placement.md) |
+| 05 — CAP and tunable consistency | [training/05-cap-and-tunable-consistency.md](training/05-cap-and-tunable-consistency.md) |
+| 06 — Gossip and topology | [training/06-gossip-and-topology.md](training/06-gossip-and-topology.md) |
+| 07 — Storage engine (write/read, compaction, tombstones) | [training/07-storage-engine-write-through-read.md](training/07-storage-engine-write-through-read.md) |
+| 08 — Self-healing, LWT, summary | [training/08-self-healing-lwt-and-summary.md](training/08-self-healing-lwt-and-summary.md) |
+
+**Modules 01–05** introduce when to use Cassandra, the cluster, keyspace modeling, placement, and consistency. **Modules 06–08** go deeper into internals, gossip, the storage engine, and repairs.
+
+More detail: [training/README.md](training/README.md).
 
 ## Prerequisites
 
@@ -44,16 +61,5 @@ To wipe data volumes and start clean:
 ```bash
 docker compose down -v
 ```
-
-## Training modules
-
-| Module | File |
-|--------|------|
-| Lab environment and workflow | [training/01-lab-environment.md](training/01-lab-environment.md) |
-| Masterless, peers, data placing | [training/02-masterless-peers-and-placement.md](training/02-masterless-peers-and-placement.md) |
-| CAP and tunable consistency | [training/03-cap-and-tunable-consistency.md](training/03-cap-and-tunable-consistency.md) |
-| Gossip and topology | [training/04-gossip-and-topology.md](training/04-gossip-and-topology.md) |
-| Storage engine: write path → reads, compaction, tombstones | [training/05-storage-engine-write-through-read.md](training/05-storage-engine-write-through-read.md) |
-| Self-healing, LWT, summary | [training/06-self-healing-lwt-and-summary.md](training/06-self-healing-lwt-and-summary.md) |
 
 Thanks to **David Leconte** for the architecture diagrams and images used in the training modules.

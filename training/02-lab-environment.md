@@ -1,4 +1,4 @@
-# 01 — Lab environment
+# 02 — Lab environment
 
 This module gets the **Docker Compose** cluster running and prepares a shared **keyspace** for later labs.
 
@@ -132,4 +132,4 @@ print(session.execute("SELECT release_version FROM system.local").one())
 
 ## Next
 
-Continue to [02-masterless-peers-and-placement.md](02-masterless-peers-and-placement.md).
+[03-data-modeling-essentials.md](03-data-modeling-essentials.md) — modeling on `events`. Then [04](04-masterless-peers-and-placement.md) → [05](05-cap-and-tunable-consistency.md). Full path: [../README.md](../README.md#learning-path).

@@ -1,6 +1,8 @@
-# 05 — Storage engine: write path, memory to disk, read path, compaction, tombstones
+# 07 — Storage engine: write path, memory to disk, read path, compaction, tombstones
 
 Topics: **LSM write path**, **memtable → SSTable flush**, **read path (Bloom, merge)**, **compaction strategies**, **tombstones**.
+
+**Previous:** [06-gossip-and-topology.md](06-gossip-and-topology.md). **Next:** [08-self-healing-lwt-and-summary.md](08-self-healing-lwt-and-summary.md).
 
 ---
 
@@ -129,4 +131,4 @@ Optionally run `TRACING ON` before the `SELECT` and look for tombstone-related m
 
 ## Next
 
-[06-self-healing-lwt-and-summary.md](06-self-healing-lwt-and-summary.md)
+[08-self-healing-lwt-and-summary.md](08-self-healing-lwt-and-summary.md)
