@@ -8,7 +8,7 @@ People use Cassandra as an **operational data store** for live workloads—time 
 
 ![References](assets/references.png)
 
-This repository is **hands-on training**: you explore architecture concepts using a **three-node** local cluster via Docker Compose. Training modules are numbered **01–07** in order.
+This repository is **hands-on training**: you explore architecture concepts using a **three-node** local cluster via Docker Compose. Training modules are numbered **01–07** in order. Each module opens with a short **Terms** line where needed so abbreviations (e.g. **CQL**, **RF**, **CL**, **CAP**, **LSM**) are defined once.
 
 ## Learning path
 
@@ -23,8 +23,6 @@ This repository is **hands-on training**: you explore architecture concepts usin
 | 07 — Self-healing, LWT, summary | [training/07-self-healing-lwt-and-summary.md](training/07-self-healing-lwt-and-summary.md) |
 
 **Modules 01–04** cover when to use Cassandra, the lab cluster, placement on the ring, and consistency. **Modules 05–07** go deeper into gossip, the storage engine, and self-healing / LWT.
-
-More detail: [training/README.md](training/README.md).
 
 ## Prerequisites
 

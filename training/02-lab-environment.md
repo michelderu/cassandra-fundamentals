@@ -11,9 +11,9 @@ This module gets the **Docker Compose** cluster running and prepares a shared **
 Before hands-on work, you need a real cluster: **three Cassandra peers** on one machine, isolated by Docker networking. You will use:
 
 - **`docker compose`** — start/stop the stack.
-- **`nodetool status`** — see which nodes are **UN** (up/normal).
-- **`cqlsh`** — interactive CQL shell (run inside a container).
-- **Keyspace** — replication scope; we use **RF = 3** to match three nodes.
+- **`nodetool status`** — see which nodes are **UN** (**U**p / **N**ormal = healthy and serving traffic).
+- **`cqlsh`** — **C**assandra **Q**uery **L**anguage shell (interactive; run inside a container).
+- **Keyspace** — named bucket for tables plus **replication settings**; we use **RF = 3** (**R**eplication **F**actor = three copies of each partition) to match three nodes.
 
 ---
 

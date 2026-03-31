@@ -2,6 +2,8 @@
 
 Topics: **masterless topology**, **peers not masters**, **consistent hashing / vNodes / replication**.
 
+**Terms:** **vNodes** = virtual nodes: each physical machine owns many small token ranges on the ring (not one big slice), which helps rebalance when nodes join or leave. **SSTable** = **S**orted **S**tring **T**able, immutable on-disk file storing rows.
+
 **Previous:** [02-lab-environment.md](02-lab-environment.md). **Next:** [04-cap-and-tunable-consistency.md](04-cap-and-tunable-consistency.md).
 
 ---
@@ -32,7 +34,7 @@ Topics: **masterless topology**, **peers not masters**, **consistent hashing / v
 
 ![Peers vs master/slave](../assets/image-7ffc3696-aeb7-479e-a9c8-ffdd0c2cd141.png)
 
-**Takeaways:** Think **token ranges**, **replication factor**, and **consistency level**, not “one primary for all writes.”
+**Takeaways:** No central writer bottleneck—throughput can scale out on commodity hardware or on **Kubernetes (K8s)** when the data model fits.
 
 ---
 
@@ -42,11 +44,11 @@ Topics: **masterless topology**, **peers not masters**, **consistent hashing / v
 
 - Hashing maps the key to a position on the **token ring**.
 - **vNodes** spread each physical node across many small ranges so rebalancing is smoother when topology changes.
-- **Replication** picks additional replicas per your strategy (`SimpleStrategy` in this lab; `NetworkTopologyStrategy` in real multi-DC deployments).
+- **Replication** picks additional replicas per your strategy (`SimpleStrategy` = one logical DC in the keyspace; `NetworkTopologyStrategy` = **per-DC** replica counts for real multi-**DC** deployments).
 
 ![Consistent hashing and vNodes](../assets/image-26ac843d-61e6-4016-b7ae-f3a7d0474e4d.png)
 
-**Takeaways:** Partition key design drives distribution; multi-DC uses **NetworkTopologyStrategy** and a matching **snitch**.
+**Takeaways:** Think **token ranges**, **RF**, and **CL**, not “one primary for all writes.” Partition key design drives distribution; multi-DC uses **NetworkTopologyStrategy** and a matching **snitch**.
 
 ---
 
@@ -82,7 +84,7 @@ Topics: **masterless topology**, **peers not masters**, **consistent hashing / v
    USE lab_ks;
 
    INSERT INTO events (user_id, event_time, payload)
-  VALUES (123e4567-e89b-12d3-a456-426614174000, toTimestamp(now()), 'placement-lab');
+   VALUES (123e4567-e89b-12d3-a456-426614174000, toTimestamp(now()), 'placement-lab');
    ```
 
 2. On the **host**, run (replace nothing if you used the UUID above):

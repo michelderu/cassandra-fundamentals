@@ -1,6 +1,8 @@
 # 01 — Fundamentals and deployment options
 
-This module frames **why** Cassandra-class databases exist and **how** common deployment choices differ. It is **module 01** in this course—read it before you start the cluster in [02-lab-environment.md](02-lab-environment.md).
+This module frames **why** Cassandra-class databases exist and **how** common deployment choices differ.
+
+**Terms used here:** **CQL** = Cassandra Query Language (SQL-like interface to Cassandra). **RF** = replication factor (how many copies of each row’s partition exist in the cluster). **CL** = consistency level (how many of those replicas must acknowledge a read or write). **DC** = datacenter. **OSS** = open source. **DBaaS** = database-as-a-service (vendor runs the database for you).
 
 ---
 
@@ -14,13 +16,13 @@ Cassandra is often used as an **operational data store (ODS)** for **live applic
 |------|------------------------------------------|
 | **Scale-out** | Add nodes to grow capacity and throughput horizontally; masterless design avoids a single write bottleneck. |
 | **Low latency** | Tunable consistency (e.g. `LOCAL_QUORUM`, `ONE`) lets you trade strictness for response time where appropriate. |
-| **High availability** | Replication across nodes/racks/DCs; no single master; survives node failures when RF and CL are chosen sensibly. |
-| **Global distribution** | Multi-datacenter replication and **local** consistency levels keep user traffic near the data that serves them. |
+| **High availability** | Replication across nodes/racks/DCs; no single master; survives node failures when **RF** and **CL** are chosen sensibly. |
+| **Global distribution** | Multi-datacenter replication and **local** CLs (e.g. `LOCAL_QUORUM` = quorum **within the same DC** as the coordinator) keep traffic near the data that serves it. |
 
 **When it may be a poor fit:**
 
 - You need rich **ad-hoc joins** across arbitrary tables (Cassandra favors **query-first, denormalized** models).
-- You require **default** single-system **strong serializable** transactions across many keys (Cassandra is **not** a traditional RDBMS; LWT is for narrow cases).
+- You require **default** single-system **strong serializable** transactions across many keys (Cassandra is **not** a traditional RDBMS; **LWT** = lightweight transactions, for narrow compare-and-set style cases only).
 - Tiny datasets with no scale or HA requirements may be simpler on a single-node SQL store.
 
 ---

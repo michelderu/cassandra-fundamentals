@@ -2,6 +2,8 @@
 
 Topics: **hinted handoff**, **read repair**, **anti-entropy repair**, **lightweight transactions (Paxos)**, **architect summary**.
 
+**Terms:** **Anti-entropy repair** = background compare-and-sync of data between replicas (often using **Merkle trees**—hash trees of data ranges). **LWT** = **lightweight transactions**. **Paxos** is a consensus protocol family; Cassandra uses LWT for linearizable `IF` / `IF NOT EXISTS` updates.
+
 **Previous:** [06-storage-engine-write-through-read.md](06-storage-engine-write-through-read.md).
 
 ---
@@ -10,7 +12,7 @@ Topics: **hinted handoff**, **read repair**, **anti-entropy repair**, **lightwei
 
 - **Hinted handoff:** If a replica is **temporarily down**, the coordinator may store a **hint** and deliver when the peer returns.
 - **Read repair:** On read, if replicas disagree, the coordinator can **write back** the latest version to stale replicas (policy-dependent).
-- **Anti-entropy repair:** `nodetool repair` (Merkle trees / incremental repair in modern versions) fixes divergence without relying on reads.
+- **Anti-entropy repair:** `nodetool repair` compares data between nodes (via **Merkle trees** in the repair protocol) and fixes divergence without relying on a client read.
 
 ![Hints and repair](../assets/image-b5f792eb-a5bb-4a89-9dea-7eeae0ea40b7.png)
 

@@ -2,6 +2,8 @@
 
 Topics: **CAP / AP framing**, **consistency levels**, **R + W > RF** intuition.
 
+**Terms:** **CAP** names three properties: **C**onsistency (every read sees the latest write), **A**vailability (every request gets a non-error response), **P**artition tolerance (the system keeps working when the network drops messages between nodes). Under a partition you cannot maximize all three—designs pick trade-offs. **AP**-leaning emphasizes **A** and **P**; per-operation **consistency** is then tuned with **CL** (consistency level). **RF** = replication factor.
+
 **Previous:** [03-masterless-peers-and-placement.md](03-masterless-peers-and-placement.md). **Next:** [05-gossip-and-topology.md](05-gossip-and-topology.md).
 
 ---
@@ -10,19 +12,28 @@ Topics: **CAP / AP framing**, **consistency levels**, **R + W > RF** intuition.
 
 **CAP (high level):** Under a **network partition**, you cannot maximize both **strong linearizable consistency everywhere** and **availability** for every operation without trade-offs.
 
-**Cassandra’s usual framing:** Described as **AP-leaning**: it prioritizes **availability** and **partition tolerance**, and uses **replication**, **repair**, and **tunable consistency** so replicas **eventually** agree.
+**Cassandra’s usual framing:** Described as **AP-leaning**: it prioritizes **availability** (nodes keep answering) and **partition tolerance**, and uses **replication**, **repair**, and **tunable consistency** so replicas **eventually** agree.
 
 **Eventual consistency:** Divergent replicas reconcile **asynchronously**. Under partitions, writes may still proceed on available sides; **consistency levels** express how much agreement you require per operation.
 
 ![CAP — Cassandra in AP space](../assets/image-7cb027ae-0cb8-4f54-8b07-8b410d7dc519.png)
 
-**Takeaways:** “AP default” does not mean “no consistency”—it means **you choose** per operation.
+**Quorum overlap:** Let **R** = number of replicas that must respond to a **read**, **W** = number that must acknowledge a **write**, and **N** = number of replicas that hold that data (typically the **replication factor** for the keyspace in that DC). Then:
+
+| Strategy | Formula | Intuition / result |
+|----------|---------|---------------------|
+| Weak / eventual | R + W <= N | There is a chance the read set and write set **never overlap**. You might read **stale** data because you did not wait for enough nodes to agree. |
+| Strong / strict | R + W > N | The read and write quorums **must overlap**. You are guaranteed to see the latest write (**provided** the operation succeeds and the system is available). |
+
+In a simple single-datacenter keyspace, **N** is the same as **RF** (replication factor), matching the **R + W > RF** rule in the tunable consistency section below.
+
+**Takeaways:** Default behavior is **not** “no consistency”—you pick **CL** per read/write.
 
 ---
 
 ## 5. Tunable consistency
 
-**Consistency level (CL)** defines **how many replicas** must respond before a read or write succeeds.
+**Consistency level (CL)** defines **how many replicas** must acknowledge a read or write before Cassandra returns success to the client.
 
 | Level | Behavior (simplified) |
 |-------|----------------------|
