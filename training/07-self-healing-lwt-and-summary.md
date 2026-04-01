@@ -54,16 +54,61 @@ Topics: **hinted handoff**, **read repair**, **anti-entropy repair**, **lightwei
 
 ## Lab A — Hinted handoff (observation)
 
-**Goal:** See hints-related metrics (exact names vary by version).
+**Goal:** After a replica is **down**, see **on-disk hint files** on a live coordinator, then relate to metrics.
+
+**Warning:** Stopping nodes is for **throwaway** lab clusters only (see [04-cap-and-tunable-consistency.md](04-cap-and-tunable-consistency.md) Lab C).
+
+### A.1 — Stop a node, write, inspect the hints directory
+
+1. **Stop** one replica (here `cassandra-3`):
+
+   ```bash
+   docker compose stop cassandra-3
+   ```
+
+   Wait ~30 seconds so other nodes **mark it down** (failure detector).
+
+2. From **cqlsh on `cassandra-1`** (same as earlier labs), run **writes** that still succeed while one replica is missing. Use **`CONSISTENCY ONE`** so the coordinator does not require a quorum of live replicas:
+
+   ```sql
+   USE lab_ks;
+   CONSISTENCY ONE;
+   INSERT INTO events (user_id, event_time, payload)
+   VALUES (uuid(), toTimestamp(now()), 'hints-lab-1');
+   INSERT INTO events (user_id, event_time, payload)
+   VALUES (uuid(), toTimestamp(now()), 'hints-lab-2');
+   ```
+
+   Run **several** inserts with different `user_id` values so at least one partition lists the stopped node among its replicas (RF=3; not every key uses the same three nodes). If the hints directory stays empty, add a few more rows.
+
+3. **List hint storage** on the coordinator you used for cqlsh (here `cassandra-1`). Hints live under **`/var/lib/cassandra/hints/`** (subfolders/files are often named by **destination** identity—exact layout varies by version):
+
+   ```bash
+   docker exec cassandra-1 sh -c 'ls -la /var/lib/cassandra/hints/'
+   docker exec cassandra-2 sh -c 'ls -la /var/lib/cassandra/hints/'
+   ```
+
+4. **Start** the node again and wait until `nodetool status` shows **UN**:
+
+   ```bash
+   docker compose start cassandra-3
+   docker exec cassandra-1 nodetool status
+   ```
+
+5. **List hint storage** again. The folder should be empty now.
+
+   ```bash
+   docker exec cassandra-1 sh -c 'ls -la /var/lib/cassandra/hints/'
+   ```
+
+### A.2 — Hint-related metrics (names vary by version)
 
 ```bash
 docker exec cassandra-1 nodetool tpstats | grep -i hint
 docker exec cassandra-1 nodetool netstats
 ```
 
-Optionally: stop `cassandra-3` for ~30s, run a few `INSERT`s with `CONSISTENCY QUORUM` (may fail if quorum unavailable—try `ONE` only if you understand the trade-off), start node back, re-check.
-
-**Deliverable:** Note whether **HintedHandOff** (or similar) appears in `tpstats` and what you infer.
+**Deliverable:** (1) What appeared under **`/var/lib/cassandra/hints/`** after writes while `cassandra-3` was stopped? (2) Whether **HintedHandOff** (or similar) shows up in `tpstats` and what you infer.
 
 ---
 
