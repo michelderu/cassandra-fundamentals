@@ -8,7 +8,7 @@ People use Cassandra as an **operational data store** for live workloads—time 
 
 ![References](assets/references.png)
 
-This repository is **hands-on training**: you explore architecture concepts using a **three-node** local cluster via Docker Compose. Training modules are numbered **01–07** in order. Each module opens with a short **Terms** table where needed so abbreviations (e.g. **CQL**, **RF**, **CL**, **CAP**, **LSM**) are defined once.
+This repository is **hands-on training**: you explore architecture concepts using a **three-node** local cluster via Docker Compose. Each module opens with a short **Terms** table where needed so abbreviations (e.g. **CQL**, **RF**, **CL**, **CAP**, **LSM**) are defined once.
 
 ## Learning path
 

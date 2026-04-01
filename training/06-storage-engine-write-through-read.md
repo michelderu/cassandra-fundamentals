@@ -84,14 +84,7 @@ On the **host**:
 
 ```bash
 docker exec cassandra-1 nodetool flush lab_ks events
-docker exec cassandra-1 nodetool listsnapshots
-docker exec cassandra-1 ls -la /var/lib/cassandra/data/lab_ks/events-*/ | head -20
-```
-
-(The exact path includes a table UUID; `find` if needed:)
-
-```bash
-docker exec cassandra-1 find /var/lib/cassandra/data/lab_ks -name "*.Data.db" 2>/dev/null | head
+docker exec cassandra-1 sh -c 'ls -la /var/lib/cassandra/data/lab_ks/events-*/ | head -20'
 ```
 
 **Deliverable:** Confirm at least one `*-Data.db` file exists after flush.
@@ -101,6 +94,7 @@ docker exec cassandra-1 find /var/lib/cassandra/data/lab_ks -name "*.Data.db" 2>
 ## Lab B — Read tracing
 
 ```sql
+USE lab_ks;
 CONSISTENCY QUORUM;
 TRACING ON;
 SELECT * FROM events WHERE user_id = 123e4567-e89b-12d3-a456-426614174000 LIMIT 5;
