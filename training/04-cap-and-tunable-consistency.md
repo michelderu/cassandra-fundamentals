@@ -2,7 +2,13 @@
 
 Topics: **CAP / AP framing**, **consistency levels**, **R + W > RF** intuition.
 
-**Terms:** **CAP** names three properties: **C**onsistency (every read sees the latest write), **A**vailability (every request gets a non-error response), **P**artition tolerance (the system keeps working when the network drops messages between nodes). Under a partition you cannot maximize all three—designs pick trade-offs. **AP**-leaning emphasizes **A** and **P**; per-operation **consistency** is then tuned with **CL** (consistency level). **RF** = replication factor.
+**Terms:**
+
+| Term | Meaning |
+|------|---------|
+| **CAP** | Names three properties: **C**onsistency (every read sees the latest write), **A**vailability (every request gets a non-error response), **P**artition tolerance (the system keeps working when the network drops messages between nodes). Under a partition you cannot maximize all three—designs pick trade-offs. |
+| **AP** | AP-leaning emphasizes **A** and **P**; per-operation consistency is then tuned with **CL** (consistency level). |
+| **RF** | Replication factor. |
 
 **Previous:** [03-masterless-peers-and-placement.md](03-masterless-peers-and-placement.md). **Next:** [05-gossip-and-topology.md](05-gossip-and-topology.md).
 

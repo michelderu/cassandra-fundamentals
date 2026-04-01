@@ -2,7 +2,13 @@
 
 Topics: **gossip protocol**, **snitches**, **multi-DC ideas** (this lab stays **single DC**).
 
-**Terms:** **WAN** = wide-area network (links between regions). A **snitch** is a plugin that tells Cassandra each node’s **rack** and **DC** so replicas can be placed across failure domains. **NTS** = `NetworkTopologyStrategy` (replication **per DC**).
+**Terms:**
+
+| Term | Meaning |
+|------|---------|
+| **WAN** | Wide-area network (links between regions). |
+| **Snitch** | Plugin that tells Cassandra each node’s **rack** and **DC** so replicas can be placed across failure domains. |
+| **NTS** | `NetworkTopologyStrategy` (replication **per DC**). |
 
 **Previous:** [04-cap-and-tunable-consistency.md](04-cap-and-tunable-consistency.md). **Next:** [06-storage-engine-write-through-read.md](06-storage-engine-write-through-read.md).
 

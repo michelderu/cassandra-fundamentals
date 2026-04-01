@@ -2,7 +2,13 @@
 
 Topics: **hinted handoff**, **read repair**, **anti-entropy repair**, **lightweight transactions (Paxos)**, **architect summary**.
 
-**Terms:** **Anti-entropy repair** = background compare-and-sync of data between replicas (often using **Merkle trees**—hash trees of data ranges). **LWT** = **lightweight transactions**. **Paxos** is a consensus protocol family; Cassandra uses LWT for linearizable `IF` / `IF NOT EXISTS` updates.
+**Terms:**
+
+| Term | Meaning |
+|------|---------|
+| **Anti-entropy repair** | Background compare-and-sync of data between replicas (often using **Merkle trees**—hash trees of data ranges). |
+| **LWT** | Lightweight transactions. |
+| **Paxos** | Consensus protocol family; Cassandra uses LWT for linearizable `IF` / `IF NOT EXISTS` updates. |
 
 **Previous:** [06-storage-engine-write-through-read.md](06-storage-engine-write-through-read.md).
 

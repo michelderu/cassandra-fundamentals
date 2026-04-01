@@ -2,7 +2,16 @@
 
 This module frames **why** Cassandra-class databases exist and **how** common deployment choices differ.
 
-**Terms used here:** **CQL** = Cassandra Query Language (SQL-like interface to Cassandra). **RF** = replication factor (how many copies of each row’s partition exist in the cluster). **CL** = consistency level (how many of those replicas must acknowledge a read or write). **DC** = datacenter. **OSS** = open source. **DBaaS** = database-as-a-service (vendor runs the database for you).
+**Terms used here:**
+
+| Term | Meaning |
+|------|---------|
+| **CQL** | Cassandra Query Language (SQL-like interface to Cassandra). |
+| **RF** | Replication factor (how many copies of each row’s partition exist in the cluster). |
+| **CL** | Consistency level (how many of those replicas must acknowledge a read or write). |
+| **DC** | Datacenter. |
+| **OSS** | Open source. |
+| **DBaaS** | Database-as-a-service (vendor runs the database for you). |
 
 ---
 

@@ -2,18 +2,24 @@
 
 This module gets the **Docker Compose** cluster running and prepares a shared **keyspace** for later labs.
 
+**Terms used here:**
+
+| Term | Meaning |
+|------|---------|
+| **docker compose** | Start/stop the stack. |
+| **nodetool status** | Shows which nodes are **UN** (up/normal = healthy and serving traffic). |
+| **cqlsh** | Cassandra Query Language shell (interactive; run inside a container). |
+| **Keyspace** | Named bucket for tables plus replication settings. |
+| **RF** | Replication factor (how many copies of each partition). |
+| **UN** | Up / Normal. |
+
 **Prerequisites:** Docker with Compose v2, ~4 GB RAM free. See [../README.md](../README.md).
 
 ---
 
 ## Concepts (brief)
 
-Before hands-on work, you need a real cluster: **three Cassandra peers** on one machine, isolated by Docker networking. You will use:
-
-- **`docker compose`** — start/stop the stack.
-- **`nodetool status`** — see which nodes are **UN** (**U**p / **N**ormal = healthy and serving traffic).
-- **`cqlsh`** — **C**assandra **Q**uery **L**anguage shell (interactive; run inside a container).
-- **Keyspace** — named bucket for tables plus **replication settings**; we use **RF = 3** (**R**eplication **F**actor = three copies of each partition) to match three nodes.
+Before hands-on work, you need a real cluster: **three Cassandra peers** on one machine, isolated by Docker networking. The lab uses **RF = 3** to match three nodes (three copies of each partition). See the **Terms** table above for tools and abbreviations.
 
 ---
 

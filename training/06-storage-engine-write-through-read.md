@@ -2,7 +2,15 @@
 
 Topics: **LSM write path**, **memtable → SSTable flush**, **read path (Bloom, merge)**, **compaction strategies**, **tombstones**.
 
-**Terms:** **LSM** = **log-structured merge** tree: writes append in batches and are merged later (no random in-place edits to old files). **SSTable** = **sorted string table** (immutable on-disk segment). **STCS** = size-tiered compaction; **LCS** = leveled compaction; **UCS** = unified compaction (adaptive; newer releases).
+**Terms:**
+
+| Term | Meaning |
+|------|---------|
+| **LSM** | Log-structured merge tree: writes append in batches and are merged later (no random in-place edits to old files). |
+| **SSTable** | Sorted string table (immutable on-disk segment). |
+| **STCS** | Size-tiered compaction. |
+| **LCS** | Leveled compaction. |
+| **UCS** | Unified compaction (adaptive; newer releases). |
 
 **Previous:** [05-gossip-and-topology.md](05-gossip-and-topology.md). **Next:** [07-self-healing-lwt-and-summary.md](07-self-healing-lwt-and-summary.md).
 

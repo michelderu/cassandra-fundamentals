@@ -2,7 +2,12 @@
 
 Topics: **masterless topology**, **peers not masters**, **consistent hashing / vNodes / replication**.
 
-**Terms:** **vNodes** = virtual nodes: each physical machine owns many small token ranges on the ring (not one big slice), which helps rebalance when nodes join or leave. **SSTable** = **S**orted **S**tring **T**able, immutable on-disk file storing rows.
+**Terms:**
+
+| Term | Meaning |
+|------|---------|
+| **vNodes** | Virtual nodes: each physical machine owns many small token ranges on the ring (not one big slice), which helps rebalance when nodes join or leave. |
+| **SSTable** | Sorted String Table: immutable on-disk file storing rows. |
 
 **Previous:** [02-lab-environment.md](02-lab-environment.md). **Next:** [04-cap-and-tunable-consistency.md](04-cap-and-tunable-consistency.md).
 
