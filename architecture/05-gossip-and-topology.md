@@ -22,7 +22,7 @@ Topics: **gossip protocol**, **snitches**, **multi-DC ideas** (this lab stays **
 
 **Accrual** failure detection is **probabilistic**, reducing false “dead” decisions under **network jitter**.
 
-![Gossip and failure detection](../assets/image-c1a5cd48-098a-43e4-9700-3eb682083291.png)
+![Gossip and failure detection](../assets/architecture-gossip-failure-detection.png)
 
 **Takeaways:** Gossip is **control-plane** metadata, not the application data path; it supports routing and repair decisions.
 
@@ -36,7 +36,7 @@ Topics: **gossip protocol**, **snitches**, **multi-DC ideas** (this lab stays **
 
 This Compose lab uses **one DC** and `SimpleStrategy` for simplicity; production multi-DC would switch strategy + snitch.
 
-![Topology and multi-DC](../assets/image-8f5cb0e9-7bbe-4042-96d3-89ea5b9b5167.png)
+![Topology and multi-DC](../assets/architecture-topology-multi-dc.png)
 
 **Takeaways:** Match **snitch + replication strategy** to real layout; this module’s labs only **peek** at endpoint metadata.
 

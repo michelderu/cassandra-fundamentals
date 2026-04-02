@@ -1,6 +1,6 @@
-# DM 07 — Pre-flight checklist, blueprint, and labs
+# 07 — Pre-flight checklist, blueprint, and labs
 
-Topics: **architect checklist**, **how modeling fits the full stack**, **hands-on labs**, **further reading**.
+Topics: **architect checklist**, **how modeling fits the full stack**, **capstone labs** (Docker Compose), **further reading**.
 
 **Previous:** [06-anti-patterns.md](06-anti-patterns.md).
 
@@ -18,7 +18,7 @@ Before you ship a schema to production, walk through these **diagnostic question
 | Does **RF** + **CL** match **latency** and **durability** goals? | Tune per use case ([04-cap-and-tunable-consistency.md](../architecture/04-cap-and-tunable-consistency.md)). |
 | Are **deletes** / **TTL** heavy? | Expect **tombstone** and **repair** amplification ([06-storage-engine-write-through-read.md](../architecture/06-storage-engine-write-through-read.md)). |
 
-![The architect’s pre-flight checklist](../assets/dm-12-preflight-checklist.png)
+![The architect’s pre-flight checklist](../assets/modeling-preflight-checklist.png)
 
 ---
 
@@ -36,7 +36,17 @@ Cassandra’s **masterless**, **log-structured** stack can support **very high**
 
 **Core modeling principles:** **Queries dictate tables.** **Partitions** distribute load. **Clustering** provides **local** order. **Denormalization** buys **speed** at the cost of duplicated data and app-side consistency rules.
 
-![The blueprint for infinite scale](../assets/dm-13-blueprint-infinite-scale.png)
+![The blueprint for infinite scale](../assets/modeling-blueprint-infinite-scale.png)
+
+---
+
+## Lab environment (Docker Compose)
+
+Use the **same** three-node stack as the architecture labs ([`docker-compose.yml`](../docker-compose.yml) at the repo root). Start / health / **cqlsh** commands: [../README.md](../README.md#start-the-lab-cluster). Full lab setup: [data-modeling README](README.md#lab-cluster-docker-compose) and keyspace `lab_ks` from [architecture/02-lab-environment.md](../architecture/02-lab-environment.md).
+
+## Capstone labs (integrate 01–06)
+
+Earlier modules each include **hands-on** steps. The three exercises below **reinforce** placement, partition-friendly queries, and denormalization—repeat them for practice or skim if you already completed the equivalent in 03–06.
 
 ---
 
@@ -79,7 +89,9 @@ SELECT * FROM events WHERE payload = 'some-payload' ALLOW FILTERING;
 
 You need “recent events across **all** users for a **given day**,” sorted by time. The existing `events` table is keyed by `user_id`, so it does **not** efficiently answer “all users, one day.”
 
-**Deliverable:** Propose a **second table**’s `PRIMARY KEY` (and clustering order) that partitions by **day** or another bucket so one query reads **one** (or a few) partitions. Note that the app must **write to both** tables (or an equivalent pipeline) and how you avoid an **unbounded** hot partition if a bucket is still too large.
+If you already created `events_by_day` in [module 05 Lab B](05-tombstones-and-denormalization.md#lab-b--denormalized-table--dual-write), **query it** by `day` and document how you would **bucket further** if a single day’s partition became too hot. Otherwise, **create** the table below and insert a few rows.
+
+**Deliverable:** Propose or refine a **second table**’s `PRIMARY KEY` (and clustering order) so one query reads **one** (or a few) partitions. Note that the app must **write to both** tables (or an equivalent pipeline) and how you avoid an **unbounded** hot partition if a bucket is still too large.
 
 Example shape (illustrative):
 

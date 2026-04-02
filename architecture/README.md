@@ -12,6 +12,6 @@ Work through **01–07** in order on the same Docker Compose cluster. These modu
 | 06 | [06-storage-engine-write-through-read.md](06-storage-engine-write-through-read.md) | LSM, SSTables, reads, compaction, tombstones |
 | 07 | [07-self-healing-lwt-and-summary.md](07-self-healing-lwt-and-summary.md) | Hints, repair, LWT |
 
-**Next:** [Data modeling](../data-modeling/README.md) — query-first schema design (DM 01–07).
+**Next:** [Data modeling](../data-modeling/README.md) — query-first schema design (01–07).
 
 Parent index: [../README.md](../README.md).

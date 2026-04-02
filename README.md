@@ -13,9 +13,9 @@ People use Cassandra as an **operational data store** for live workloads—time 
 This repo is **hands-on training** in two parts:
 
 1. **Architecture** — You run a **three-node** cluster (Docker Compose) and work through **internals and operations** in [`architecture/`](architecture/README.md): placement, consistency, gossip, the storage engine, and repairs / LWT. Each module uses a short **Terms** table where needed (**CQL**, **RF**, **CL**, **CAP**, **LSM**, etc.).
-2. **Data modeling** — A **seven-module** track in [`data-modeling/`](data-modeling/README.md) teaches **query-first** schema design: partition keys, clustering, denormalization, and anti-patterns. It uses **blueprint-style** diagrams (`assets/dm-*.png`) and assumes you understand the architecture track (especially partitions, replication, and reads/writes).
+2. **Data modeling** — A **seven-module** track in [`data-modeling/`](data-modeling/README.md) teaches **query-first** schema design: partition keys, clustering, denormalization, and anti-patterns. It uses **blueprint-style** diagrams (`assets/modeling-*.png`) and includes **hands-on labs in each module** on the **same Docker Compose cluster** ([`docker-compose.yml`](docker-compose.yml)). Create `lab_ks` / `events` per [architecture/02-lab-environment.md](architecture/02-lab-environment.md) before module **02**; see [data-modeling/README.md](data-modeling/README.md#hands-on-labs-by-module) for the lab index.
 
-You can complete **architecture** first, then **data modeling**, or jump to data modeling if you already run Cassandra and mainly need the modeling narrative (the labs still use the shared `lab_ks` keyspace from [module 02](architecture/02-lab-environment.md)).
+You can complete **architecture** first, then **data modeling**, or jump to data modeling if you already run Cassandra—still use Compose and [module 02](architecture/02-lab-environment.md) for the shared schema before the hands-on exercises.
 
 ## Learning path
 
@@ -39,13 +39,13 @@ Index and order: **[data-modeling/README.md](data-modeling/README.md)**.
 
 | Module | File |
 |--------|------|
-| DM 01 — Intro and paradigm | [data-modeling/01-intro-and-paradigm.md](data-modeling/01-intro-and-paradigm.md) |
-| DM 02 — Process and primary key | [data-modeling/02-process-and-primary-key.md](data-modeling/02-process-and-primary-key.md) |
-| DM 03 — Placement and partition health | [data-modeling/03-placement-and-partition-health.md](data-modeling/03-placement-and-partition-health.md) |
-| DM 04 — Clustering and wide partitions | [data-modeling/04-clustering-and-wide-partitions.md](data-modeling/04-clustering-and-wide-partitions.md) |
-| DM 05 — Tombstones and denormalization | [data-modeling/05-tombstones-and-denormalization.md](data-modeling/05-tombstones-and-denormalization.md) |
-| DM 06 — Anti-patterns | [data-modeling/06-anti-patterns.md](data-modeling/06-anti-patterns.md) |
-| DM 07 — Checklist, labs, blueprint | [data-modeling/07-checklist-labs-and-blueprint.md](data-modeling/07-checklist-labs-and-blueprint.md) |
+| 01 — Intro and paradigm | [data-modeling/01-intro-and-paradigm.md](data-modeling/01-intro-and-paradigm.md) |
+| 02 — Process and primary key | [data-modeling/02-process-and-primary-key.md](data-modeling/02-process-and-primary-key.md) |
+| 03 — Placement and partition health | [data-modeling/03-placement-and-partition-health.md](data-modeling/03-placement-and-partition-health.md) |
+| 04 — Clustering and wide partitions | [data-modeling/04-clustering-and-wide-partitions.md](data-modeling/04-clustering-and-wide-partitions.md) |
+| 05 — Tombstones and denormalization | [data-modeling/05-tombstones-and-denormalization.md](data-modeling/05-tombstones-and-denormalization.md) |
+| 06 — Anti-patterns | [data-modeling/06-anti-patterns.md](data-modeling/06-anti-patterns.md) |
+| 07 — Checklist, labs, blueprint | [data-modeling/07-checklist-labs-and-blueprint.md](data-modeling/07-checklist-labs-and-blueprint.md) |
 
 ## Prerequisites
 

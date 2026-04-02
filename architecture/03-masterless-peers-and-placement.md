@@ -21,7 +21,7 @@ Topics: **masterless topology**, **peers not masters**, **consistent hashing / v
 
 **Why it matters:** If one node fails, others continue serving traffic. You scale by **adding nodes**, not by buying one bigger “master” machine.
 
-![Masterless architecture](../assets/image-30783e4d-ea27-45db-bc9e-34d773c4fba1.png)
+![Masterless architecture](../assets/architecture-masterless.png)
 
 **Takeaways:** No master; every node can serve; replication + gossip keep the cluster coherent; tunable consistency applies per operation.
 
@@ -37,7 +37,7 @@ Topics: **masterless topology**, **peers not masters**, **consistent hashing / v
 - **Linear scalability** — more nodes → more aggregate throughput (workload-dependent).
 - **Commodity hardware** — scale **out** with many servers instead of scaling **up** one huge box.
 
-![Peers vs master/slave](../assets/image-7ffc3696-aeb7-479e-a9c8-ffdd0c2cd141.png)
+![Peers vs master/slave](../assets/architecture-peers-vs-master-slave.png)
 
 **Takeaways:** No central writer bottleneck—throughput can scale out on commodity hardware or on **Kubernetes (K8s)** when the data model fits.
 
@@ -51,7 +51,7 @@ Topics: **masterless topology**, **peers not masters**, **consistent hashing / v
 - **vNodes** spread each physical node across many small ranges so rebalancing is smoother when topology changes.
 - **Replication** picks additional replicas per your strategy (`SimpleStrategy` = one logical DC in the keyspace; `NetworkTopologyStrategy` = **per-DC** replica counts for real multi-**DC** deployments).
 
-![Consistent hashing and vNodes](../assets/image-26ac843d-61e6-4016-b7ae-f3a7d0474e4d.png)
+![Consistent hashing and vNodes](../assets/architecture-consistent-hashing-vnodes.png)
 
 **Takeaways:** Think **token ranges**, **RF**, and **CL**, not “one primary for all writes.” Partition key design drives distribution; multi-DC uses **NetworkTopologyStrategy** and a matching **snitch**.
 

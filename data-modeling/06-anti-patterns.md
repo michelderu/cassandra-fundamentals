@@ -1,6 +1,6 @@
-# DM 06 — Anti-patterns and performance traps
+# 06 — Anti-patterns and performance traps
 
-Topics: **secondary indexes**, **`ALLOW FILTERING`**, **lightweight transactions (LWT)** and hot keys.
+Topics: **secondary indexes**, **`ALLOW FILTERING`**, **lightweight transactions (LWT) and hot keys**, **labs: filter + index + LWT**.
 
 **Terms:**
 
@@ -31,9 +31,56 @@ Topics: **secondary indexes**, **`ALLOW FILTERING`**, **lightweight transactions
 - **Cost:** Roughly **~4×** the round-trips of a simple write in typical discussions—use **sparingly**.
 - **Trap:** **Hot partition** + **frequent LWT** → **contention** and tail latency. Prefer idempotent designs and partition keys that spread serializing work.
 
-![Anti-patterns and performance traps](../assets/dm-11-anti-patterns.png)
+![Anti-patterns and performance traps](../assets/modeling-anti-patterns.png)
 
 **Takeaways:** If the hot query needs a column, that column usually belongs in a **primary key** or a **dedicated denormalized table**, not behind an index + filter as the main path.
+
+---
+
+## Lab A — `ALLOW FILTERING` vs index
+
+**Goal:** Feel why **non-key** filters are dangerous at scale.
+
+**Environment:** [Docker Compose](README.md#lab-cluster-docker-compose); `lab_ks.events` with varied `payload` values.
+
+1. `USE lab_ks;`
+2. Pick a `payload` you know exists. Run:
+
+   ```sql
+   SELECT * FROM events WHERE payload = 'your-payload-here' ALLOW FILTERING;
+   ```
+
+3. **Optional — secondary index:** `CREATE INDEX IF NOT EXISTS ON events (payload);` then repeat the `SELECT` **without** `ALLOW FILTERING` (behavior depends on Cassandra version; note any warning or coordinator fan-out in [tracing](https://cassandra.apache.org/doc/latest/cassandra/tools/cqlsh.html)).
+
+**Deliverable:** Why is this a poor primary access pattern for huge tables even if it “works” in the lab?
+
+---
+
+## Lab B — Lightweight transaction (optional)
+
+**Goal:** See conditional write **cost** (Paxos rounds) — use **sparingly**.
+
+**Environment:** same cluster.
+
+1. Create a tiny scratch table:
+
+   ```sql
+   USE lab_ks;
+   CREATE TABLE IF NOT EXISTS dm_lwt_demo (
+     id uuid PRIMARY KEY,
+     v int
+   );
+   ```
+
+2. Insert with a condition:
+
+   ```sql
+   INSERT INTO dm_lwt_demo (id, v) VALUES (123e4567-e89b-12d3-a456-4266141740aa, 0) IF NOT EXISTS;
+   ```
+
+3. Run the same `INSERT ... IF NOT EXISTS` again and observe `[applied]` vs `false`.
+
+**Deliverable:** One line: when would you use LWT vs application-level idempotency? ([architecture/07-self-healing-lwt-and-summary.md](../architecture/07-self-healing-lwt-and-summary.md))
 
 ---
 
