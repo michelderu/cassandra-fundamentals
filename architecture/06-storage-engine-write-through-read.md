@@ -22,7 +22,7 @@ Writes use **LSM** semantics: **append-only commit log** (durability) plus **mem
 
 Compared with many **row-oriented** stores that **update** pages in place on disk, LSM trees **append** and **merge** later, which favors **sequential I/O** and high ingest rates (at the cost of read-path merging and compaction work).
 
-![Write path — LSM](../assets/image-af54af2e-6dcd-4c94-b8c6-be15a5c9d57e.png)
+![Write path — LSM](../../assets/image-af54af2e-6dcd-4c94-b8c6-be15a5c9d57e.png)
 
 **Takeaways:** Fast sequential writes; crash recovery replays the commit log.
 
@@ -32,7 +32,7 @@ Compared with many **row-oriented** stores that **update** pages in place on dis
 
 When memtables flush, data becomes **immutable SSTables** (sorted by partition key, with indexes). Updates are new SSTables over time; **compaction** merges them.
 
-![Flush to SSTables](../assets/image-2516a5a1-c80a-4d45-8be1-0ad0db3b8687.png)
+![Flush to SSTables](../../assets/image-2516a5a1-c80a-4d45-8be1-0ad0db3b8687.png)
 
 **Takeaways:** Immutability drives **tombstones** and **read merge** behavior.
 
@@ -42,7 +42,7 @@ When memtables flush, data becomes **immutable SSTables** (sorted by partition k
 
 Reads check the **memtable** first, then **SSTables** on disk. **Bloom filters** cheaply skip SSTables that cannot contain the partition; the **key cache** speeds index lookups. **LWW** = **last-write-wins** merge by **timestamp** when multiple versions exist.
 
-![Read path](../assets/image-f4939ea8-2734-4575-831e-3f07a64ffc89.png)
+![Read path](../../assets/image-f4939ea8-2734-4575-831e-3f07a64ffc89.png)
 
 **Takeaways:** Minimize SSTable reads via caches and compaction strategy choice.
 
@@ -52,7 +52,7 @@ Reads check the **memtable** first, then **SSTables** on disk. **Bloom filters**
 
 Compaction merges SSTables to reduce **read amplification** (too many files to check per read). **STCS** (size-tiered) suits write-heavy workloads; **LCS** (leveled) suits read-heavy patterns; **UCS** (unified) is adaptive in newer releases.
 
-![Compaction](../assets/image-ff5b07da-cf6f-4804-8106-1b70cfbeda51.png)
+![Compaction](../../assets/image-ff5b07da-cf6f-4804-8106-1b70cfbeda51.png)
 
 **Takeaways:** Strategy affects write amplification vs read cost; tune per table workload.
 
@@ -62,7 +62,7 @@ Compaction merges SSTables to reduce **read amplification** (too many files to c
 
 **Delete** = write a **tombstone** (a marker row). **`gc_grace_seconds`** = **garbage-collection grace**: how long tombstones must stay before compaction can drop them, so offline replicas can still learn about the delete.
 
-![Tombstones](../assets/image-f20bbdcb-968f-4733-bb80-b2daa32ea736.png)
+![Tombstones](../../assets/image-f20bbdcb-968f-4733-bb80-b2daa32ea736.png)
 
 **Takeaways:** Deletes cost like writes; wide partitions with heavy deletes need care.
 

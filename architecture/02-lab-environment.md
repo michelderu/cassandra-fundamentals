@@ -13,7 +13,7 @@ This module gets the **Docker Compose** cluster running and prepares a shared **
 | **RF** | Replication factor (how many copies of each partition). |
 | **UN** | Up / Normal. |
 
-**Prerequisites:** Docker with Compose v2, ~4 GB RAM free. See [../README.md](../README.md).
+**Prerequisites:** Docker with Compose v2, ~4 GB RAM free. See the [repository README](../../README.md).
 
 ---
 
@@ -138,4 +138,4 @@ print(session.execute("SELECT release_version FROM system.local").one())
 
 ## Next
 
-[03-masterless-peers-and-placement.md](03-masterless-peers-and-placement.md) — placement and the ring. Full path: [../README.md](../README.md#learning-path).
+[03-masterless-peers-and-placement.md](03-masterless-peers-and-placement.md) — placement and the ring. Full path: [repository README](../../README.md#learning-path).

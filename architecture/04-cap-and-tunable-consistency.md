@@ -22,7 +22,7 @@ Topics: **CAP / AP framing**, **consistency levels**, **R + W > RF** intuition.
 
 **Eventual consistency:** Divergent replicas reconcile **asynchronously**. Under partitions, writes may still proceed on available sides; **consistency levels** express how much agreement you require per operation.
 
-![CAP — Cassandra in AP space](../assets/image-7cb027ae-0cb8-4f54-8b07-8b410d7dc519.png)
+![CAP — Cassandra in AP space](../../assets/image-7cb027ae-0cb8-4f54-8b07-8b410d7dc519.png)
 
 **Quorum overlap:** Let **R** = number of replicas that must respond to a **read**, **W** = number that must acknowledge a **write**, and **N** = number of replicas that hold that data (typically the **replication factor** for the keyspace in that DC). Then:
 
@@ -49,7 +49,7 @@ In a simple single-datacenter keyspace, **N** is the same as **RF** (replication
 
 **Read-your-writes intuition:** **R + W > RF** (with quorums) implies overlapping quorums so a reader can see the latest write.
 
-![Tunable consistency](../assets/image-d77b744f-ffc6-4cd0-8d60-2bfd5ae3224b.png)
+![Tunable consistency](../../assets/image-d77b744f-ffc6-4cd0-8d60-2bfd5ae3224b.png)
 
 **Takeaways:** CL is a **latency vs correctness** knob; defaults and per-statement overrides should match your app.
 
