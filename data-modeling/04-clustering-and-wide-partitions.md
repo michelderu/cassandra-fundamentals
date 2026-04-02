@@ -38,7 +38,7 @@ That hits **one partition**, then applies an efficient **range** on clustering. 
 
 Partitions are not free to grow forever. **Very wide** partitions increase:
 
-- **Reads** — More SSTable components to merge per read ([06-storage-engine-write-through-read.md](../training/fundamentals/06-storage-engine-write-through-read.md)).
+- **Reads** — More SSTable components to merge per read ([06-storage-engine-write-through-read.md](../architecture/06-storage-engine-write-through-read.md)).
 - **Maintenance** — Heavier **repair** and compaction scope on that partition.
 - **Resources** — **Heap** and **GC** pressure on coordinators and replicas.
 

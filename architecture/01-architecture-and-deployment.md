@@ -1,4 +1,4 @@
-# 01 — Fundamentals and deployment options
+# 01 — Architecture and deployment options
 
 This module frames **why** Cassandra-class databases exist and **how** common deployment choices differ.
 

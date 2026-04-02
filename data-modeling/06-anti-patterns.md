@@ -7,7 +7,7 @@ Topics: **secondary indexes**, **`ALLOW FILTERING`**, **lightweight transactions
 | Term | Meaning |
 |------|---------|
 | **Secondary index** | An index that is **distributed** with caveats: often poor for **high-cardinality** “find anywhere in the cluster” queries—can fan out to **every** node. |
-| **LWT** | Lightweight transaction (`IF`, `IF NOT EXISTS`) using **Paxos**-style rounds—**several** round-trips vs a normal write ([07-self-healing-lwt-and-summary.md](../training/fundamentals/07-self-healing-lwt-and-summary.md)). |
+| **LWT** | Lightweight transaction (`IF`, `IF NOT EXISTS`) using **Paxos**-style rounds—**several** round-trips vs a normal write ([07-self-healing-lwt-and-summary.md](../architecture/07-self-healing-lwt-and-summary.md)). |
 
 **Previous:** [05-tombstones-and-denormalization.md](05-tombstones-and-denormalization.md). **Next:** [07-checklist-labs-and-blueprint.md](07-checklist-labs-and-blueprint.md).
 

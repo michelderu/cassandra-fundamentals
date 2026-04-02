@@ -1,6 +1,6 @@
 # Data modeling track
 
-Work through **DM 01–DM 07** after the **fundamentals** modules (**01–07**). These modules use the **blueprint** diagrams in [`../assets`](../assets) (`dm-01-*.png` … `dm-13-*.png`) and align with the hands-on cluster from [02-lab-environment.md](../training/fundamentals/02-lab-environment.md).
+Work through **DM 01–DM 07** after the **architecture** modules (**01–07**), or in parallel once you know the cluster basics. These modules use the **blueprint** diagrams in [`../assets`](../assets) (`dm-01-*.png` … `dm-13-*.png`) and align with the hands-on cluster from [02-lab-environment.md](../architecture/02-lab-environment.md).
 
 | # | File | Focus |
 |---|------|--------|

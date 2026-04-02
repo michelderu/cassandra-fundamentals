@@ -20,7 +20,7 @@ Topics: **hinted handoff**, **read repair**, **anti-entropy repair**, **lightwei
 - **Read repair:** On read, if replicas disagree, the coordinator can **write back** the latest version to stale replicas (policy-dependent).
 - **Anti-entropy repair:** `nodetool repair` compares data between nodes (via **Merkle trees** in the repair protocol) and fixes divergence without relying on a client read.
 
-![Hints and repair](../../assets/image-b5f792eb-a5bb-4a89-9dea-7eeae0ea40b7.png)
+![Hints and repair](../assets/image-b5f792eb-a5bb-4a89-9dea-7eeae0ea40b7.png)
 
 **Takeaways:** Operational hygiene: schedule **repair**; understand **read repair** impact on read latency.
 
@@ -32,7 +32,7 @@ Topics: **hinted handoff**, **read repair**, **anti-entropy repair**, **lightwei
 
 **Cost:** Often **~4×** round-trips vs a simple write—use only where needed.
 
-![LWT and Paxos](../../assets/image-0d007069-3093-4d8b-8421-705578190309.png)
+![LWT and Paxos](../assets/image-0d007069-3093-4d8b-8421-705578190309.png)
 
 **Takeaways:** Hot partitions + LWT = contention; prefer idempotent design where possible.
 
@@ -48,7 +48,7 @@ Topics: **hinted handoff**, **read repair**, **anti-entropy repair**, **lightwei
 | **Consistency** | **Tunable**; **AP**-leaning default with **eventual** convergence. |
 | **Ideal fit** | **High velocity**, **geo-distributed**, **uptime**-sensitive workloads when the model fits. |
 
-![Architect’s summary](../../assets/image-e62b7935-dd49-4f58-b603-4ab0c1081926.png)
+![Architect’s summary](../assets/image-e62b7935-dd49-4f58-b603-4ab0c1081926.png)
 
 ---
 
@@ -165,5 +165,5 @@ Without running new commands, write a short answer for each:
 
 ## Next
 
-End of the fundamentals sequence. Follow-on: **data modeling** track starting at [DM 01 — Intro and paradigm](../../data-modeling/01-intro-and-paradigm.md). See the [course overview](../../README.md) to revisit any module.
+End of the **architecture** sequence. Follow-on: **data modeling** track starting at [DM 01 — Intro and paradigm](../data-modeling/01-intro-and-paradigm.md). See the [course overview](../README.md) to revisit any module.
 

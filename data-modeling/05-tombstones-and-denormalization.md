@@ -16,7 +16,7 @@ Topics: **deletes as writes**, **tombstones and `gc_grace_seconds`**, **fan-out 
 
 Cassandra is **append-oriented** (LSM): a **delete** is **not** an in-place erase—it is a **write** of a **tombstone**. Reads merge live cells and tombstones; **last write wins** by timestamp. Tombstones stay visible to the storage layer for **`gc_grace_seconds`** (default often **10 days**) so a temporarily offline replica can still learn about the delete—only then can compaction discard data safely.
 
-**Modeling impact:** **Wide partitions** with **heavy insert/delete churn** force reads to **scan and reconcile** many dead markers—latency suffers. Pair partition sizing with delete/TTL strategy ([06-storage-engine-write-through-read.md](../training/fundamentals/06-storage-engine-write-through-read.md)).
+**Modeling impact:** **Wide partitions** with **heavy insert/delete churn** force reads to **scan and reconcile** many dead markers—latency suffers. Pair partition sizing with delete/TTL strategy ([06-storage-engine-write-through-read.md](../architecture/06-storage-engine-write-through-read.md)).
 
 ![Handling churn: tombstones and deletes](../assets/dm-09-tombstones-deletes.png)
 

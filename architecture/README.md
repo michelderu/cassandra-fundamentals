@@ -1,10 +1,10 @@
-# Fundamentals (cluster labs)
+# Architecture (cluster labs)
 
-Work through **01–07** in order on the same Docker Compose cluster.
+Work through **01–07** in order on the same Docker Compose cluster. These modules cover **Cassandra internals and operations**: topology, replication and consistency, gossip, the storage engine, and repairs / lightweight transactions.
 
 | # | File | Focus |
 |---|------|--------|
-| 01 | [01-fundamentals-and-deployment.md](01-fundamentals-and-deployment.md) | When to use Cassandra; OSS vs HCD vs Astra DB |
+| 01 | [01-architecture-and-deployment.md](01-architecture-and-deployment.md) | When to use Cassandra; OSS vs HCD vs Astra DB |
 | 02 | [02-lab-environment.md](02-lab-environment.md) | Cluster, `lab_ks`, `events` table |
 | 03 | [03-masterless-peers-and-placement.md](03-masterless-peers-and-placement.md) | Masterless topology, token ring, `getendpoints` |
 | 04 | [04-cap-and-tunable-consistency.md](04-cap-and-tunable-consistency.md) | CAP, consistency levels, tracing |
@@ -12,6 +12,6 @@ Work through **01–07** in order on the same Docker Compose cluster.
 | 06 | [06-storage-engine-write-through-read.md](06-storage-engine-write-through-read.md) | LSM, SSTables, reads, compaction, tombstones |
 | 07 | [07-self-healing-lwt-and-summary.md](07-self-healing-lwt-and-summary.md) | Hints, repair, LWT |
 
-**Next:** [data modeling track](../../data-modeling/README.md).
+**Next:** [Data modeling](../data-modeling/README.md) — query-first schema design (DM 01–07).
 
 Parent index: [../README.md](../README.md).

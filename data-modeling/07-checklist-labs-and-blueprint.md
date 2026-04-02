@@ -15,8 +15,8 @@ Before you ship a schema to production, walk through these **diagnostic question
 | What is the **exact CQL** for each hot path? | Avoid surprise **full scans** or extra round-trips. |
 | Is each read **partition-scoped** with a **known** key? | If not, **redesign** or add a **denormalized** table for that pattern. |
 | Will **any** partition grow **unbounded**? | You need **bucketing**, **archiving**, or a different partition strategy. |
-| Does **RF** + **CL** match **latency** and **durability** goals? | Tune per use case ([04-cap-and-tunable-consistency.md](../training/fundamentals/04-cap-and-tunable-consistency.md)). |
-| Are **deletes** / **TTL** heavy? | Expect **tombstone** and **repair** amplification ([06-storage-engine-write-through-read.md](../training/fundamentals/06-storage-engine-write-through-read.md)). |
+| Does **RF** + **CL** match **latency** and **durability** goals? | Tune per use case ([04-cap-and-tunable-consistency.md](../architecture/04-cap-and-tunable-consistency.md)). |
+| Are **deletes** / **TTL** heavy? | Expect **tombstone** and **repair** amplification ([06-storage-engine-write-through-read.md](../architecture/06-storage-engine-write-through-read.md)). |
 
 ![The architect’s pre-flight checklist](../assets/dm-12-preflight-checklist.png)
 
@@ -46,7 +46,7 @@ Cassandra’s **masterless**, **log-structured** stack can support **very high**
 
 1. In cqlsh: `USE lab_ks;` then `DESCRIBE TABLE events;`
 2. Identify **partition key** vs **clustering** column.
-3. Insert a row with a **fixed** `user_id` (reuse a UUID from [03-masterless-peers-and-placement.md](../training/fundamentals/03-masterless-peers-and-placement.md) if you like).
+3. Insert a row with a **fixed** `user_id` (reuse a UUID from [03-masterless-peers-and-placement.md](../architecture/03-masterless-peers-and-placement.md) if you like).
 4. On the host: `docker exec cassandra-1 nodetool getendpoints lab_ks events '<that-user-id>'`
 
 **Deliverable:** Two sentences: (1) what is hashed to the ring, (2) how clustering affects row order inside that partition.
@@ -105,4 +105,4 @@ CREATE TABLE IF NOT EXISTS events_by_day (
 
 Full course overview: [../README.md](../README.md#learning-path). Data modeling index: [README.md](README.md).
 
-To connect back to operations: [03-masterless-peers-and-placement.md](../training/fundamentals/03-masterless-peers-and-placement.md) (ring), [06-storage-engine-write-through-read.md](../training/fundamentals/06-storage-engine-write-through-read.md) (SSTables, tombstones).
+To connect back to operations: [03-masterless-peers-and-placement.md](../architecture/03-masterless-peers-and-placement.md) (ring), [06-storage-engine-write-through-read.md](../architecture/06-storage-engine-write-through-read.md) (SSTables, tombstones).

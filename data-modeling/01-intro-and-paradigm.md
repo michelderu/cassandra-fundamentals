@@ -10,9 +10,9 @@ Topics: **why query-first design**, **relational workflow vs Cassandra workflow*
 | **Clustering key(s)** | Columns after the partition key; define **sort order** and row uniqueness **inside** one partition. |
 | **Denormalization** | Storing the same logical information in more than one table so each **access pattern** can read without server-side joins. |
 
-**Prerequisites:** Completing the fundamentals track through [07-self-healing-lwt-and-summary.md](../training/fundamentals/07-self-healing-lwt-and-summary.md) is recommended. The labs assume keyspace `lab_ks` from [02-lab-environment.md](../training/fundamentals/02-lab-environment.md).
+**Prerequisites:** Completing the **architecture** track through [07-self-healing-lwt-and-summary.md](../architecture/07-self-healing-lwt-and-summary.md) is recommended. The labs assume keyspace `lab_ks` from [02-lab-environment.md](../architecture/02-lab-environment.md).
 
-**Previous:** [07-self-healing-lwt-and-summary.md](../training/fundamentals/07-self-healing-lwt-and-summary.md). **Next:** [02-process-and-primary-key.md](02-process-and-primary-key.md).
+**Previous:** [07-self-healing-lwt-and-summary.md](../architecture/07-self-healing-lwt-and-summary.md). **Next:** [02-process-and-primary-key.md](02-process-and-primary-key.md).
 
 ---
 

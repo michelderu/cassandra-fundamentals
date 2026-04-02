@@ -17,7 +17,7 @@ Topics: **four-step process**, **partition key vs clustering**, **lab `events` e
 
 Work **in order**:
 
-1. **List access patterns** — For each pattern, note read/write frequency, **latency budget**, and whether you need **strong** or **eventual** behavior (tie to **CL** in [04-cap-and-tunable-consistency.md](../training/fundamentals/04-cap-and-tunable-consistency.md)).
+1. **List access patterns** — For each pattern, note read/write frequency, **latency budget**, and whether you need **strong** or **eventual** behavior (tie to **CL** in [04-cap-and-tunable-consistency.md](../architecture/04-cap-and-tunable-consistency.md)).
 2. **Choose partition key(s)** — So the query **narrows to one partition** (or a small, bounded set). Avoid cluster-wide scans.
 3. **Define clustering columns** — **Row order** and uniqueness **inside** the partition (e.g. `event_time DESC` for “latest first”).
 4. **Duplicate data when needed** — If two patterns need **different partition keys**, use **two tables** (or a carefully chosen materialized path). Accept denormalization.
@@ -35,7 +35,7 @@ The `PRIMARY KEY` has two roles:
 - **Partition key** — Hashed to a **token** on the ring; decides **which replicas** store the partition. All rows sharing the same partition key live in **one partition** on disk.
 - **Clustering key(s)** — Follow the partition key; define **sort order** on disk (default ascending; override with `CLUSTERING ORDER BY`) and **uniqueness** of each row within the partition.
 
-Example aligned with the lab table `events` ([02-lab-environment.md](../training/fundamentals/02-lab-environment.md)):
+Example aligned with the lab table `events` ([02-lab-environment.md](../architecture/02-lab-environment.md)):
 
 ```sql
 PRIMARY KEY (user_id, event_time)

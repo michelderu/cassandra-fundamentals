@@ -21,11 +21,11 @@ The **partition key** is hashed to a **token** on the ring. That token determine
 docker exec cassandra-1 nodetool getendpoints lab_ks events '<user_id-uuid>'
 ```
 
-(See [03-masterless-peers-and-placement.md](../training/fundamentals/03-masterless-peers-and-placement.md).)
+(See [03-masterless-peers-and-placement.md](../architecture/03-masterless-peers-and-placement.md).)
 
 ![Distributed data placement via consistent hashing](../assets/dm-05-consistent-hashing-placement.png)
 
-**Law of placement:** **Placement and load follow the partition key.** **Replication factor (RF)** and **consistency level (CL)** do **not** fix a bad key—they only control **how many replicas** participate in each operation ([04-cap-and-tunable-consistency.md](../training/fundamentals/04-cap-and-tunable-consistency.md)).
+**Law of placement:** **Placement and load follow the partition key.** **Replication factor (RF)** and **consistency level (CL)** do **not** fix a bad key—they only control **how many replicas** participate in each operation ([04-cap-and-tunable-consistency.md](../architecture/04-cap-and-tunable-consistency.md)).
 
 ---
 
