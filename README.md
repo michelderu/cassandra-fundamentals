@@ -33,8 +33,6 @@ You can complete **architecture** first, then **data modeling**, or jump to data
 
 ### Data modeling (CQL labs)
 
-Index and order: **[data-modeling/README.md](data-modeling/README.md)**.
-
 | Module | File |
 |--------|------|
 | 01 — Intro and paradigm | [01-intro-and-paradigm.md](data-modeling/01-intro-and-paradigm.md) |
