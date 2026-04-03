@@ -12,8 +12,8 @@ People use Cassandra as an **operational data store** for live workloads—time 
 
 This repo is **hands-on training** in two parts:
 
-1. **Architecture** — You run a **three-node** cluster (Docker Compose) and work through **internals and operations** in [`architecture/`](architecture/README.md): placement, consistency, gossip, the storage engine, and repairs / LWT. Each module uses a short **Terms** table where needed (**CQL**, **RF**, **CL**, **CAP**, **LSM**, etc.).
-2. **Data modeling** — A **seven-module** track in [`data-modeling/`](data-modeling/README.md) teaches **query-first** schema design: partition keys, clustering, denormalization, and anti-patterns. It uses **blueprint-style** diagrams (`assets/modeling-*.png`) and includes **hands-on labs in each module** on the **same Docker Compose cluster** ([`docker-compose.yml`](docker-compose.yml)). Create `lab_ks` / `events` per [architecture/02-lab-environment.md](architecture/02-lab-environment.md) before module **02**; see [data-modeling/README.md](data-modeling/README.md#hands-on-labs-by-module) for the lab index.
+1. **Architecture** — You run a **three-node** cluster (Docker Compose) and work through **internals and operations** in [`architecture/`](architecture/README.md): placement, consistency, gossip, the storage engine, and repairs / LWT.
+2. **Data modeling** — A **seven-module** track in [`data-modeling/`](data-modeling/README.md) teaches **query-first** schema design: partition keys, clustering, denormalization, and anti-patterns. It includes **hands-on labs in each module** on the **same Docker Compose cluster** ([`docker-compose.yml`](docker-compose.yml)). Create `lab_ks` / `events` per [architecture/02-lab-environment.md](architecture/02-lab-environment.md) before module **02**.
 
 You can complete **architecture** first, then **data modeling**, or jump to data modeling if you already run Cassandra—still use Compose and [module 02](architecture/02-lab-environment.md) for the shared schema before the hands-on exercises.
 
@@ -31,9 +31,7 @@ You can complete **architecture** first, then **data modeling**, or jump to data
 | 06 — Storage engine (write/read, compaction, tombstones) | [architecture/06-storage-engine-write-through-read.md](architecture/06-storage-engine-write-through-read.md) |
 | 07 — Self-healing, LWT, summary | [architecture/07-self-healing-lwt-and-summary.md](architecture/07-self-healing-lwt-and-summary.md) |
 
-**Modules 01–04** cover when to use Cassandra, the lab cluster, placement on the ring, and consistency. **Modules 05–07** go deeper into gossip, the storage engine, and self-healing / LWT.
-
-### Data modeling (blueprint track)
+### Data modeling (CQL labs)
 
 Index and order: **[data-modeling/README.md](data-modeling/README.md)**.
 
@@ -95,4 +93,4 @@ docker compose down -v
 1. Apache Software Foundation, *Apache Cassandra* (homepage: scale, testing, and user quotes). [https://cassandra.apache.org/](https://cassandra.apache.org/)
 2. Apache Cassandra community, *2024 User Survey Results* (October 2024, n=140). [https://cassandra.apache.org/_/blog/2024-User-Survey.html](https://cassandra.apache.org/_/blog/2024-User-Survey.html)
 
-Thanks to **David Leconte** for the architecture diagrams and images used in the cluster-lab modules.
+Thanks to **David Leconte** for the architecture images used in the Architecture modules.

@@ -20,8 +20,6 @@ Topics: **why query-first design**, **relational workflow vs Cassandra workflow*
 
 Cassandra’s **masterless**, **log-structured** architecture can deliver **high throughput** and **linear scale-out**—but only if the **data model** matches how the cluster physically stores and retrieves data (partitions on the ring, LSM writes, tunable consistency). This track is the **architect’s blueprint**: query-driven schemas, partitioning, and deliberate duplication.
 
-![The architect’s blueprint: Cassandra data modeling — query-driven schemas, partitioning, denormalization](../assets/modeling-blueprint-title.png)
-
 ---
 
 ## Database paradigm contrast: relational vs Cassandra

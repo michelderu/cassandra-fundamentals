@@ -6,7 +6,7 @@ Topics: **secondary indexes**, **`ALLOW FILTERING`**, **lightweight transactions
 
 | Term | Meaning |
 |------|---------|
-| **Secondary index** | An index that is **distributed** with caveats: often poor for **high-cardinality** “find anywhere in the cluster” queries—can fan out to **every** node. |
+| **Secondary index** | An index that is **distributed** with caveats: traditional secondary indexes are often poor for **high-cardinality** “find anywhere in the cluster” queries—can fan out to **every** node. However, the newer **Storage-Attached Index (SAI)** is designed for efficiency and scalability, making it a **good choice** for many secondary index use cases, especially for flexible queries requiring more than just primary or clustering keys. |
 | **LWT** | Lightweight transaction (`IF`, `IF NOT EXISTS`) using **Paxos**-style rounds—**several** round-trips vs a normal write ([07-self-healing-lwt-and-summary.md](../architecture/07-self-healing-lwt-and-summary.md)). |
 
 **Previous:** [05-tombstones-and-denormalization.md](05-tombstones-and-denormalization.md). **Next:** [07-checklist-labs-and-blueprint.md](07-checklist-labs-and-blueprint.md).
@@ -35,6 +35,8 @@ Topics: **secondary indexes**, **`ALLOW FILTERING`**, **lightweight transactions
 
 **Takeaways:** If the hot query needs a column, that column usually belongs in a **primary key** or a **dedicated denormalized table**, not behind an index + filter as the main path.
 
+> **Note:** While Cassandra has historically offered only eventual and timeline consistency (using LWTs for strongly consistent updates), **Cassandra 6** (in preview as of 2024) introduces full **ACID transactional support** via the new **Accord** protocol. Accord brings true distributed transactions—atomic, consistent, isolated, and durable—directly to Cassandra, allowing multi-row and multi-partition transactions with strong guarantees. This fundamental change will unlock more flexible modeling and application patterns, reducing the need for workarounds formerly required for transactional workloads.
+
 ---
 
 ## Lab A — `ALLOW FILTERING` vs index
@@ -50,9 +52,24 @@ Topics: **secondary indexes**, **`ALLOW FILTERING`**, **lightweight transactions
    SELECT * FROM events WHERE payload = 'your-payload-here' ALLOW FILTERING;
    ```
 
+   Also try it without `ALLOW FILTERING`.
+
 3. **Optional — secondary index:** `CREATE INDEX IF NOT EXISTS ON events (payload);` then repeat the `SELECT` **without** `ALLOW FILTERING` (behavior depends on Cassandra version; note any warning or coordinator fan-out in [tracing](https://cassandra.apache.org/doc/latest/cassandra/tools/cqlsh.html)).
 
-**Deliverable:** Why is this a poor primary access pattern for huge tables even if it “works” in the lab?
+4. **Optional — SAI (Storage-Attached Index):** If your Cassandra version supports **SAI** (Cassandra 4.0+ with SAI enabled, or DataStax Enterprise), create an SAI index instead of the traditional secondary index:
+
+   ```sql
+   -- For SAI, syntax may vary slightly by version; commonly:
+   CREATE CUSTOM INDEX IF NOT EXISTS ON events (payload)
+       USING 'StorageAttachedIndex';
+   ```
+   
+   Then re-run the same `SELECT` query **without** `ALLOW FILTERING`.  
+   **Observe:** SAI indexes are much more efficient and scalable for flexible queries, as they avoid the fan-out and coordinator load typical of classic secondary indexes.  
+   **Note:** SAI is the **recommended** approach for secondary indexing as of Cassandra 4.0+ and DataStax Astra DB, offering improved performance and operational simplicity for real-world workloads.
+
+
+**Deliverable:** Why could this be a poor primary access pattern for huge tables even if it “works” in the lab?
 
 ---
 

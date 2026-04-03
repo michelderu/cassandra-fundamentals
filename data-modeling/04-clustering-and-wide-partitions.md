@@ -83,6 +83,8 @@ Partitions are not free to grow forever. **Very wide** partitions increase:
 1. Create a small demo table (drop later if you like):
 
    ```sql
+   USE lab_ks;
+
    CREATE TABLE IF NOT EXISTS dm_cluster_demo (
      demo_id uuid,
      seq int,

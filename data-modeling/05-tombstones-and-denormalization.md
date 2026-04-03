@@ -41,6 +41,8 @@ One application write can **fan out** to both tables in one request path (or via
 
 **Takeaways:** Duplication trades **storage and discipline** for **predictable, partition-local reads**.
 
+> **Note:** While Cassandra's traditional secondary indexes have limitations for scalable, partition-local queries, the newer **Storage-Attached Indexing (SAI)** feature is a powerful option for many secondary index use cases. SAI provides efficient, scalable secondary indexes—especially helpful when you need flexible queries beyond your primary and clustering keys. We'll explore SAI in more depth later in this series.
+
 ---
 
 ## Lab A — Delete and tombstone behavior
@@ -57,7 +59,14 @@ One application write can **fan out** to both tables in one request path (or via
    VALUES (123e4567-e89b-12d3-a456-426614174099, '2020-06-01 12:00:00+0000', 'dm05-delete-me');
    ```
 
-2. `DELETE` that exact row (full primary key: `user_id` + `event_time`).
+2. `DELETE` that exact row (full primary key: `user_id` + `event_time`):
+
+   ```sql
+   DELETE FROM events
+   WHERE user_id = 123e4567-e89b-12d3-a456-426614174099
+     AND event_time = '2020-06-01 12:00:00+0000';
+   ```
+
 3. `SELECT * FROM events WHERE user_id = 123e4567-e89b-12d3-a456-426614174099;`
 
 **Deliverable:** One sentence: why the row “disappears” without an immediate physical erase on disk (see [architecture/06-storage-engine-write-through-read.md](../architecture/06-storage-engine-write-through-read.md)).

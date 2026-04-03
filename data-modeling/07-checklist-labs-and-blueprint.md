@@ -110,6 +110,11 @@ CREATE TABLE IF NOT EXISTS events_by_day (
 ## Further reading (official)
 
 - Apache Cassandra documentation — *Data modeling* (conceptual, logical, physical). [https://cassandra.apache.org/doc/stable/cassandra/developing/data-modeling/index.html](https://cassandra.apache.org/doc/stable/cassandra/developing/data-modeling/index.html)
+- DataStax CQL (Cassandra Query Language) Reference:
+  - [https://docs.datastax.com/en/cql-oss/3.3/index.html](https://docs.datastax.com/en/cql-oss/3.3/index.html)
+  - This includes detailed syntax, types, and advanced features for CQL, compatible with both Apache Cassandra and DataStax Enterprise.
+  - *Quick CQL cheatsheet*: [https://docs.datastax.com/en/cql-oss/3.3/cql/cql_reference/cql_commands/cqlCheatSheet.html](https://docs.datastax.com/en/cql-oss/3.3/cql/cql_reference/cql_commands/cqlCheatSheet.html)
+
 
 ---
 
