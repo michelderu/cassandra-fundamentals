@@ -23,13 +23,13 @@ You can complete **architecture** first, then **data modeling**, or jump to data
 
 | Module | File |
 |--------|------|
-| 01 — Architecture and deployment | [architecture/01-architecture-and-deployment.md](architecture/01-architecture-and-deployment.md) |
-| 02 — Lab environment | [architecture/02-lab-environment.md](architecture/02-lab-environment.md) |
-| 03 — Masterless, peers, placement | [architecture/03-masterless-peers-and-placement.md](architecture/03-masterless-peers-and-placement.md) |
-| 04 — CAP and tunable consistency | [architecture/04-cap-and-tunable-consistency.md](architecture/04-cap-and-tunable-consistency.md) |
-| 05 — Gossip and topology | [architecture/05-gossip-and-topology.md](architecture/05-gossip-and-topology.md) |
-| 06 — Storage engine (write/read, compaction, tombstones) | [architecture/06-storage-engine-write-through-read.md](architecture/06-storage-engine-write-through-read.md) |
-| 07 — Self-healing, LWT, summary | [architecture/07-self-healing-lwt-and-summary.md](architecture/07-self-healing-lwt-and-summary.md) |
+| 01 — Architecture and deployment | [01-architecture-and-deployment.md](architecture/01-architecture-and-deployment.md) |
+| 02 — Lab environment | [02-lab-environment.md](architecture/02-lab-environment.md) |
+| 03 — Masterless, peers, placement | [03-masterless-peers-and-placement.md](architecture/03-masterless-peers-and-placement.md) |
+| 04 — CAP and tunable consistency | [04-cap-and-tunable-consistency.md](architecture/04-cap-and-tunable-consistency.md) |
+| 05 — Gossip and topology | [05-gossip-and-topology.md](architecture/05-gossip-and-topology.md) |
+| 06 — Storage engine (write/read, compaction, tombstones) | [06-storage-engine-write-through-read.md](architecture/06-storage-engine-write-through-read.md) |
+| 07 — Self-healing, LWT, summary | [07-self-healing-lwt-and-summary.md](architecture/07-self-healing-lwt-and-summary.md) |
 
 ### Data modeling (CQL labs)
 
@@ -37,13 +37,13 @@ Index and order: **[data-modeling/README.md](data-modeling/README.md)**.
 
 | Module | File |
 |--------|------|
-| 01 — Intro and paradigm | [data-modeling/01-intro-and-paradigm.md](data-modeling/01-intro-and-paradigm.md) |
-| 02 — Process and primary key | [data-modeling/02-process-and-primary-key.md](data-modeling/02-process-and-primary-key.md) |
-| 03 — Placement and partition health | [data-modeling/03-placement-and-partition-health.md](data-modeling/03-placement-and-partition-health.md) |
-| 04 — Clustering and wide partitions | [data-modeling/04-clustering-and-wide-partitions.md](data-modeling/04-clustering-and-wide-partitions.md) |
-| 05 — Tombstones and denormalization | [data-modeling/05-tombstones-and-denormalization.md](data-modeling/05-tombstones-and-denormalization.md) |
-| 06 — Anti-patterns | [data-modeling/06-anti-patterns.md](data-modeling/06-anti-patterns.md) |
-| 07 — Checklist, labs, blueprint | [data-modeling/07-checklist-labs-and-blueprint.md](data-modeling/07-checklist-labs-and-blueprint.md) |
+| 01 — Intro and paradigm | [01-intro-and-paradigm.md](data-modeling/01-intro-and-paradigm.md) |
+| 02 — Process and primary key | [02-process-and-primary-key.md](data-modeling/02-process-and-primary-key.md) |
+| 03 — Placement and partition health | [03-placement-and-partition-health.md](data-modeling/03-placement-and-partition-health.md) |
+| 04 — Clustering and wide partitions | [04-clustering-and-wide-partitions.md](data-modeling/04-clustering-and-wide-partitions.md) |
+| 05 — Tombstones and denormalization | [05-tombstones-and-denormalization.md](data-modeling/05-tombstones-and-denormalization.md) |
+| 06 — Anti-patterns | [06-anti-patterns.md](data-modeling/06-anti-patterns.md) |
+| 07 — Checklist, labs, blueprint | [07-checklist-labs-and-blueprint.md](data-modeling/07-checklist-labs-and-blueprint.md) |
 
 ## Prerequisites
 
