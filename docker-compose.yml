@@ -57,7 +57,7 @@ services:
     volumes:
       - cassandra-3-data:/var/lib/cassandra
     depends_on:
-      cassandra-1:
+      cassandra-2:
         condition: service_healthy
     healthcheck:
       test: ["CMD-SHELL", "bash -c '</dev/tcp/localhost/9042' || exit 1"]
