@@ -1,72 +1,70 @@
-# Apache Cassandra training cluster — 3 nodes, RF=3 capable, single datacenter.
-# Requires Docker with Compose v2+.
-
 services:
   cassandra-1:
-    image: cassandra:5.0
+    image: cassandra:latest
     container_name: cassandra-1
-    hostname: cassandra-1
+    restart: unless-stopped
     ports:
       - "9042:9042"
-    environment: &cassandra-env
+    environment:
       CASSANDRA_CLUSTER_NAME: training-lab
-      CASSANDRA_SEEDS: cassandra-1
-      MAX_HEAP_SIZE: 512M
-      HEAP_NEWSIZE: 128M
+      CASSANDRA_ENDPOINT_SNITCH: GossipingPropertyFileSnitch
+      CASSANDRA_DC: datacenter1
+      MAX_HEAP_SIZE: 1G
+      HEAP_NEWSIZE: 200M
     volumes:
       - cassandra-1-data:/var/lib/cassandra
-    networks:
-      - cassandra-net
     healthcheck:
-      test: ["CMD-SHELL", "nodetool status | grep -q UN"]
-      interval: 15s
-      timeout: 10s
-      retries: 12
-      start_period: 90s
+      test: ["CMD-SHELL", "bash -c '</dev/tcp/localhost/9042' || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 15
+      start_period: 60s
 
   cassandra-2:
-    image: cassandra:5.0
+    image: cassandra:latest
     container_name: cassandra-2
-    hostname: cassandra-2
+    restart: unless-stopped
     environment:
-      <<: *cassandra-env
+      CASSANDRA_CLUSTER_NAME: training-lab
+      CASSANDRA_ENDPOINT_SNITCH: GossipingPropertyFileSnitch
+      CASSANDRA_DC: datacenter1
+      CASSANDRA_SEEDS: cassandra-1
+      MAX_HEAP_SIZE: 1G
+      HEAP_NEWSIZE: 200M
     volumes:
       - cassandra-2-data:/var/lib/cassandra
-    networks:
-      - cassandra-net
     depends_on:
       cassandra-1:
         condition: service_healthy
     healthcheck:
-      test: ["CMD-SHELL", "nodetool status | grep -q UN"]
-      interval: 15s
-      timeout: 10s
-      retries: 12
-      start_period: 90s
+      test: ["CMD-SHELL", "bash -c '</dev/tcp/localhost/9042' || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 15
+      start_period: 60s
 
   cassandra-3:
-    image: cassandra:5.0
+    image: cassandra:latest
     container_name: cassandra-3
-    hostname: cassandra-3
+    restart: unless-stopped
     environment:
-      <<: *cassandra-env
+      CASSANDRA_CLUSTER_NAME: training-lab
+      CASSANDRA_ENDPOINT_SNITCH: GossipingPropertyFileSnitch
+      CASSANDRA_DC: datacenter1
+      CASSANDRA_SEEDS: cassandra-1
+      MAX_HEAP_SIZE: 1G
+      HEAP_NEWSIZE: 200M
     volumes:
       - cassandra-3-data:/var/lib/cassandra
-    networks:
-      - cassandra-net
     depends_on:
       cassandra-1:
         condition: service_healthy
     healthcheck:
-      test: ["CMD-SHELL", "nodetool status | grep -q UN"]
-      interval: 15s
-      timeout: 10s
-      retries: 12
-      start_period: 90s
-
-networks:
-  cassandra-net:
-    driver: bridge
+      test: ["CMD-SHELL", "bash -c '</dev/tcp/localhost/9042' || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 15
+      start_period: 60s
 
 volumes:
   cassandra-1-data:
