@@ -30,9 +30,8 @@ Use either **Podman Machine** (via Podman Desktop/Podman) or **Colima** for your
 | **Docker Engine + Compose v2** | **Yes (recommended baseline)** | **Linux:** No VM | Native Linux setup; simplest path in most dev environments. |
 | **Docker Desktop** | **Yes** | **macOS/Windows:** Docker Desktop VM | Common on macOS/Windows, but may be restricted by enterprise licensing/policy. |
 | **Podman CLI** | **Yes** | **Linux:** No VM; **macOS/Windows:** Podman Machine VM | Rootless and enterprise-friendly; use `podman compose` or a Docker-compatible wrapper. |
-| **Podman Desktop (+ Podman Machine)** | **Yes** | **Linux:** No VM; **macOS/Windows:** Podman Machine VM | GUI-based Podman workflow. |
+| **Podman Desktop** | **Yes** | **Linux:** No VM; **macOS/Windows:** Podman Machine VM | GUI-based Podman workflow. |
 | **Colima + Docker CLI** | **Yes** | Colima VM | Lightweight VM plus Docker-compatible commands, often used instead of Docker Desktop. |
-| **Rancher Desktop / Lima-based setups** | **Usually** | Typically a local VM on macOS/Windows | Works when Docker-compatible mode is enabled and `docker compose` is available. |
 
 ### Enterprise policy notes
 
@@ -65,7 +64,7 @@ Use Colima if you want Docker-compatible commands backed by a lightweight VM (fo
 brew install colima docker docker-compose
 
 # Start Colima VM
-colima start
+colima start --cpu 4 --memory 6
 
 # Verify Docker CLI talks to Colima
 docker context show
@@ -84,12 +83,6 @@ Then run this lab exactly as written:
 ```bash
 docker compose up -d
 docker exec cassandra-1 nodetool status
-```
-
-If resources are tight, start Colima with more memory/CPU:
-
-```bash
-colima start --cpu 4 --memory 6
 ```
 
 **Prerequisites:** A Docker-compatible runtime with Compose support, plus ~4 GB RAM free. See the [repository README](../README.md).
