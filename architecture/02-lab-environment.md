@@ -49,6 +49,42 @@ source ~/.bashrc
 
 If aliases are blocked by policy, run a wrapper script or just replace `docker`/`docker compose` with `podman`/`podman compose` manually.
 
+### If your environment needs Colima
+
+Use Colima when Docker Desktop is not allowed but you still want Docker-compatible commands.
+
+```bash
+# Install (macOS examples)
+brew install colima docker docker-compose
+
+# Start Colima VM
+colima start
+
+# Verify Docker CLI talks to Colima
+docker context show
+docker version
+docker compose version
+```
+
+If `docker` cannot reach the daemon after `colima start`, switch to the Colima context:
+
+```bash
+docker context use colima
+```
+
+Then run this lab exactly as written:
+
+```bash
+docker compose up -d
+docker exec cassandra-1 nodetool status
+```
+
+If resources are tight, start Colima with more memory/CPU (example):
+
+```bash
+colima start --cpu 4 --memory 6
+```
+
 **Prerequisites:** A Docker-compatible runtime with Compose support, plus ~4 GB RAM free. See the [repository README](../README.md).
 
 ---
