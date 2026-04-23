@@ -15,26 +15,33 @@ This module gets the **Docker Compose** cluster running and prepares a shared **
 
 ## Container runtime options
 
-This lab expects a Docker-compatible CLI (`docker` + `docker compose`). You can run it with several local container stacks:
+This lab expects a Docker-compatible CLI (`docker` + `docker compose`).
 
-| Option | Works with this lab? | Notes |
-|--------|-----------------------|-------|
-| **Docker Engine + Compose v2** | **Yes (recommended baseline)** | Native Linux setup; simplest path in most dev environments. |
-| **Docker Desktop** | **Yes** | Common on macOS/Windows, but often restricted or disallowed in enterprise environments due to licensing or policy. |
-| **Podman CLI** | **Yes** | Rootless and enterprise-friendly; CLI is similar but not identical to Docker. Use `podman compose` or a Docker-compatible wrapper. |
-| **Podman Desktop** | **Yes** | GUI on top of Podman; good alternative where Docker Desktop is not approved. Verify Compose support and socket compatibility. |
-| **Colima (macOS/Linux VM helper)** | **Yes** | Runs a lightweight VM and exposes a Docker-compatible daemon; useful if you cannot use Docker Desktop. |
-| **Rancher Desktop / Lima-based setups** | **Usually** | Can work if Docker-compatible mode is enabled and `docker compose` is available. |
+### Choose one stack
+
+- **Docker path:** Docker Engine (Linux) or Docker Desktop (macOS/Windows).
+- **Podman path:** Podman CLI or Podman Desktop. On macOS/Windows, Podman Desktop typically runs containers through **Podman Machine** (its VM backend).
+- **Colima path:** Colima + Docker CLI (`docker`, `docker compose`) as a lightweight Docker-compatible VM runtime.
+
+Use either **Podman Machine** (via Podman Desktop/Podman) or **Colima** for your VM-backed local runtime; most users do not need both.
+
+| Option | Works with this lab? | VM backend | Notes |
+|--------|-----------------------|------------|-------|
+| **Docker Engine + Compose v2** | **Yes (recommended baseline)** | **Linux:** No VM | Native Linux setup; simplest path in most dev environments. |
+| **Docker Desktop** | **Yes** | **macOS/Windows:** Docker Desktop VM | Common on macOS/Windows, but may be restricted by enterprise licensing/policy. |
+| **Podman CLI** | **Yes** | **Linux:** No VM; **macOS/Windows:** Podman Machine VM | Rootless and enterprise-friendly; use `podman compose` or a Docker-compatible wrapper. |
+| **Podman Desktop (+ Podman Machine)** | **Yes** | **Linux:** No VM; **macOS/Windows:** Podman Machine VM | GUI-based Podman workflow. |
+| **Colima + Docker CLI** | **Yes** | Colima VM | Lightweight VM plus Docker-compatible commands, often used instead of Docker Desktop. |
+| **Rancher Desktop / Lima-based setups** | **Usually** | Typically a local VM on macOS/Windows | Works when Docker-compatible mode is enabled and `docker compose` is available. |
 
 ### Enterprise policy notes
 
-- If your company does not allow **Docker Desktop**, use **Docker Engine** (Linux) or **Podman/Podman Desktop**.
-- For Podman-based setups, ensure the Docker-compatible socket/alias is enabled so lab commands keep working.
-- If your runtime does not provide `docker compose`, translate commands to the equivalent (`podman compose`, etc.).
+- If Docker Desktop is not allowed, use Docker Engine (Linux), Podman/Podman Desktop, or Colima + Docker CLI.
+- If your runtime does not provide `docker compose`, use the equivalent command (`podman compose`, etc.).
 
-### Helper options (Podman compatibility)
+### Podman helper (keep lab commands unchanged)
 
-If you use Podman but want to run this guide without changing every command, use one of these helpers:
+If you use Podman but want to run this guide without changing every command:
 
 ```bash
 # Shell wrapper (current session)
@@ -47,11 +54,11 @@ echo 'docker() { podman "$@"; }' >> ~/.bashrc
 source ~/.bashrc
 ```
 
-If aliases are blocked by policy, run a wrapper script or just replace `docker`/`docker compose` with `podman`/`podman compose` manually.
+If wrappers are blocked by policy, replace `docker`/`docker compose` with `podman`/`podman compose` manually.
 
-### If your environment needs Colima
+### Colima quick start (when you choose Colima)
 
-Use Colima when Docker Desktop is not allowed but you still want Docker-compatible commands.
+Use Colima if you want Docker-compatible commands backed by a lightweight VM (for policy or preference reasons).
 
 ```bash
 # Install (macOS examples)
@@ -66,7 +73,7 @@ docker version
 docker compose version
 ```
 
-If `docker` cannot reach the daemon after `colima start`, switch to the Colima context:
+If `docker` cannot reach the daemon after `colima start`, switch context:
 
 ```bash
 docker context use colima
@@ -79,7 +86,7 @@ docker compose up -d
 docker exec cassandra-1 nodetool status
 ```
 
-If resources are tight, start Colima with more memory/CPU (example):
+If resources are tight, start Colima with more memory/CPU:
 
 ```bash
 colima start --cpu 4 --memory 6
