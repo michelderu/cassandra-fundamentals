@@ -48,44 +48,6 @@ You can complete **architecture** first, then **data modeling**, or jump to data
 - Docker Desktop or Docker Engine **with Compose v2**
 - About **4 GB** free RAM for the stack (heap capped at 512 MB per node in `docker-compose.yml`)
 
-## Start the lab cluster
-
-```bash
-docker compose up -d
-```
-
-If your installation only provides Compose v1:
-
-```bash
-docker-compose up -d
-```
-
-Wait until all nodes show **UN** (up/normal):
-
-```bash
-docker exec cassandra-1 nodetool status
-```
-
-Connect with **cqlsh** (from any node):
-
-```bash
-docker exec -it cassandra-1 cqlsh cassandra-1 9042
-```
-
-The host maps **port 9042** to `cassandra-1` for drivers connecting from your machine (e.g. `127.0.0.1:9042`).
-
-## Stop and reset
-
-```bash
-docker compose down
-```
-
-To wipe data volumes and start clean:
-
-```bash
-docker compose down -v
-```
-
 ## References
 
 1. Apache Software Foundation, *Apache Cassandra* (homepage: scale, testing, and user quotes). [https://cassandra.apache.org/](https://cassandra.apache.org/)
