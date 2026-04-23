@@ -13,7 +13,43 @@ This module gets the **Docker Compose** cluster running and prepares a shared **
 | **RF** | Replication factor (how many copies of each partition). |
 | **UN** | Up / Normal. |
 
-**Prerequisites:** Docker with Compose v2, ~4 GB RAM free. See the [repository README](../README.md).
+## Container runtime options
+
+This lab expects a Docker-compatible CLI (`docker` + `docker compose`). You can run it with several local container stacks:
+
+| Option | Works with this lab? | Notes |
+|--------|-----------------------|-------|
+| **Docker Engine + Compose v2** | **Yes (recommended baseline)** | Native Linux setup; simplest path in most dev environments. |
+| **Docker Desktop** | **Yes** | Common on macOS/Windows, but often restricted or disallowed in enterprise environments due to licensing or policy. |
+| **Podman CLI** | **Yes** | Rootless and enterprise-friendly; CLI is similar but not identical to Docker. Use `podman compose` or a Docker-compatible wrapper. |
+| **Podman Desktop** | **Yes** | GUI on top of Podman; good alternative where Docker Desktop is not approved. Verify Compose support and socket compatibility. |
+| **Colima (macOS/Linux VM helper)** | **Yes** | Runs a lightweight VM and exposes a Docker-compatible daemon; useful if you cannot use Docker Desktop. |
+| **Rancher Desktop / Lima-based setups** | **Usually** | Can work if Docker-compatible mode is enabled and `docker compose` is available. |
+
+### Enterprise policy notes
+
+- If your company does not allow **Docker Desktop**, use **Docker Engine** (Linux) or **Podman/Podman Desktop**.
+- For Podman-based setups, ensure the Docker-compatible socket/alias is enabled so lab commands keep working.
+- If your runtime does not provide `docker compose`, translate commands to the equivalent (`podman compose`, etc.).
+
+### Helper options (Podman compatibility)
+
+If you use Podman but want to run this guide without changing every command, use one of these helpers:
+
+```bash
+# Shell wrapper (current session)
+docker() { podman "$@"; }
+```
+
+```bash
+# Persist wrapper for bash
+echo 'docker() { podman "$@"; }' >> ~/.bashrc
+source ~/.bashrc
+```
+
+If aliases are blocked by policy, run a wrapper script or just replace `docker`/`docker compose` with `podman`/`podman compose` manually.
+
+**Prerequisites:** A Docker-compatible runtime with Compose support, plus ~4 GB RAM free. See the [repository README](../README.md).
 
 ---
 
