@@ -1,6 +1,6 @@
-# Architecture (cluster labs)
+# Architecture (long form)
 
-The timed class for this material is **Phase 1** in [`sessions/`](../sessions/README.md): session 1 (architecture, DSE explained, placement) and session 2 (consistency, gossip, storage, a failure lab). Modules **01–07** are the longer reference on the same Docker Compose cluster: topology, replication and consistency, gossip, the storage engine, and repairs / lightweight transactions. DSE is explained in [01](01-architecture-and-deployment.md). There is no DSE lab.
+These notes were folded into [session 1](../sessions/01-common-foundation.md) and [session 2](../sessions/02-consistency-topology-storage.md). Read the session. This folder is the earlier split of that same text. DSE is explained in session 1. There is no DSE lab.
 
 | # | File | Focus |
 |---|------|--------|
@@ -12,6 +12,4 @@ The timed class for this material is **Phase 1** in [`sessions/`](../sessions/RE
 | 06 | [06-storage-engine-write-through-read.md](06-storage-engine-write-through-read.md) | LSM, SSTables, reads, compaction, tombstones |
 | 07 | [07-self-healing-lwt-and-summary.md](07-self-healing-lwt-and-summary.md) | Hints, repair, LWT |
 
-**Next:** [Data modeling](../data-modeling/README.md) — query-first schema design (01–07).
-
-Parent index: [../README.md](../README.md).
+The course continues at [session 2](../sessions/02-consistency-topology-storage.md), then [session 3](../sessions/03-query-driven-design.md). Do not start `data-modeling/` from here.

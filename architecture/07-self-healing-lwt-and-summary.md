@@ -165,5 +165,5 @@ Without running new commands, write a short answer for each:
 
 ## Next
 
-End of the **architecture** sequence. Follow-on: **data modeling** track starting at [01 — Intro and paradigm](../data-modeling/01-intro-and-paradigm.md). See the [course overview](../README.md) to revisit any module.
+End of this earlier split. The same material, with the labs on the clock, is [session 2](../sessions/02-consistency-topology-storage.md) and then [session 3](../sessions/03-query-driven-design.md).
 

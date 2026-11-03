@@ -1,6 +1,6 @@
-# Data modeling track
+# Data modeling (long form)
 
-The timed class for this material is **Phase 2** in [`sessions/`](../sessions/README.md): session 3 (query-driven design) and session 4 (CQL, drivers, tombstones, TTL, anti-patterns). Work the modules below when you want the longer reference, after the architecture modules or once the cluster from [session 1](../sessions/01-common-foundation.md) is up. Diagrams live in [`../assets`](../assets) as descriptive PNGs (`modeling-*.png`, e.g. `modeling-blueprint-title.png`, `modeling-partition-token-ring.png`).
+These notes were folded into [session 3](../sessions/03-query-driven-design.md) and [session 4](../sessions/04-cql-drivers-performance.md). Read the session. This folder is the earlier split of that same text. Diagrams live in [`../assets`](../assets).
 
 ## Lab cluster (Docker Compose)
 
@@ -10,7 +10,7 @@ The timed class for this material is **Phase 2** in [`sessions/`](../sessions/RE
 2. **Start:** `docker compose up -d` — [../README.md](../README.md#start-the-lab-cluster).
 3. **Health:** `docker exec cassandra-1 nodetool status` until every node is **UN**.
 4. **cqlsh:** `docker exec -it cassandra-1 cqlsh cassandra-1 9042`
-5. **Schema:** Create keyspace `lab_ks` and table `events` with [architecture/02-lab-environment.md](../architecture/02-lab-environment.md) (Lab B). Module **01** also walks through a minimal connectivity check; you need `lab_ks` before most later labs.
+5. **Schema:** `lab_ks` and `events` come from [session 1](../sessions/01-common-foundation.md). Create them there before these extra labs.
 
 **Stop / reset:** [../README.md](../README.md#stop-and-reset).
 

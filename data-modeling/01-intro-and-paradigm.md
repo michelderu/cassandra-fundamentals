@@ -10,9 +10,9 @@ Topics: **why query-first design**, **relational workflow vs Cassandra workflow*
 | **Clustering key(s)** | Columns after the partition key; define **sort order** and row uniqueness **inside** one partition. |
 | **Denormalization** | Storing the same logical information in more than one table so each **access pattern** can read without server-side joins. |
 
-**Prerequisites:** Completing the **architecture** track through [07-self-healing-lwt-and-summary.md](../architecture/07-self-healing-lwt-and-summary.md) is recommended. Hands-on work uses the **Docker Compose** lab cluster ([`docker-compose.yml`](../docker-compose.yml), [data-modeling README](README.md)). Create `lab_ks` / `events` per [architecture/02-lab-environment.md](../architecture/02-lab-environment.md) before module **02** onward (module **01** only needs a running cluster).
+**Prerequisites:** [Session 1](../sessions/01-common-foundation.md) and [session 2](../sessions/02-consistency-topology-storage.md). This file is the long form of [session 3](../sessions/03-query-driven-design.md), not a second course. Create `lab_ks` / `events` in session 1 before module **02**.
 
-**Previous:** [07-self-healing-lwt-and-summary.md](../architecture/07-self-healing-lwt-and-summary.md). **Next:** [02-process-and-primary-key.md](02-process-and-primary-key.md).
+**Previous:** [session 2](../sessions/02-consistency-topology-storage.md). **Next:** [02-process-and-primary-key.md](02-process-and-primary-key.md).
 
 ---
 

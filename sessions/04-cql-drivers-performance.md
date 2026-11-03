@@ -6,7 +6,7 @@
 
 **Purpose:** Write the CQL and the driver calls that keep a query-driven model fast: upserts, paging, prepared statements, tombstones, TTL, a second table, and the traps (`ALLOW FILTERING`, secondary index as the main path, hot LWT).
 
-**Requires:** `lab_ks.events` and the three rows for user `123e4567-e89b-12d3-a456-4266141740bb` from session 3. Labs still use open-source Cassandra. The driver settings are the same ones you point at DSE.
+**Requires:** `lab_ks.events` and the three rows for user `123e4567-e89b-12d3-a456-4266141740bb` from session 3. Labs still use open-source Cassandra. The driver settings are the same ones you point at DSE. The explanation for this session is in this file. The Python file you run is `labs/driver_basics.py`.
 
 ## You leave able to
 
@@ -42,7 +42,7 @@ CQL looks like SQL and then refuses the habits SQL allows.
 - **Prepare once.** Parse on the server, bind values, set consistency on the statement. String-concatenated CQL hides both the query shape and the consistency level.
 - **Consistency is a statement property.** Schema replication is RF. The driver chooses `LOCAL_QUORUM` (or `ONE`) per call. On DSE you use the same DataStax drivers and the same levels; you change contact points and local DC, not the modeling rules.
 
-Types, collections, counters, and user-defined types are reference material, not this session. Cheatsheet links: [data-modeling/07 — further reading](../data-modeling/07-checklist-labs-and-blueprint.md).
+A few CQL features exist and are not the way through this model. **Collections** (`list`, `set`, `map`) store a small nested value inside one cell. They are a poor place to hide a growing history. **Counters** are a special column type with their own limits and merge rules, not a general integer you increment. **User-defined types** bundle columns under one name. None of them remove the need for a partition key you know in advance. The language manual, when you want syntax rather than another lab, is the [Cassandra CQL reference](https://cassandra.apache.org/doc/stable/cassandra/cql/). Data modeling as a longer essay, same idea as this session, is the [Cassandra data modeling guide](https://cassandra.apache.org/doc/stable/cassandra/developing/data-modeling/index.html).
 
 ---
 
@@ -50,7 +50,7 @@ Types, collections, counters, and user-defined types are reference material, not
 
 **About 25 minutes.**
 
-A delete is a write of a **tombstone**. Reads hide the old cells. The marker stays for **`gc_grace_seconds`** (often 10 days) so a replica that was offline can still learn about the delete. Compaction may drop the data only after that. Until then, a partition full of dead rows is a slow partition.
+Cassandra is append-only, which session 2 established. A delete is not an in-place erase. It is a write of a **tombstone**. Reads merge live cells and tombstones, and last write wins by timestamp. The marker stays visible to the storage engine for **`gc_grace_seconds`**, often 10 days, so a replica that was offline can still learn the delete. Only then may compaction discard the data. Until then, a wide partition with heavy insert and delete churn forces reads to reconcile a lot of dead markers, and latency suffers. Pair partition size with the delete strategy. TTL is that strategy when the product is allowed to forget the row: a deadline on the write. When it elapses, the server writes a tombstone, and the same grace period applies. A table-level `default_time_to_live` does this for every write that does not set its own TTL. TTL does not bound a hot key. If every row in one partition expires together, you scheduled a delete storm.
 
 ```sql
 USE lab_ks;
@@ -85,15 +85,15 @@ SELECT id, payload, TTL(payload) FROM ttl_demo WHERE id = 'short';
 
 ![Tombstones and deletes](../assets/modeling-tombstones-deletes.png)
 
-Reference: [data-modeling/05](../data-modeling/05-tombstones-and-denormalization.md), storage background in [architecture/06](../architecture/06-storage-engine-write-through-read.md).
-
 ---
 
 ## 3. Lab — two queries, two tables
 
 **About 25 minutes.**
 
-“Events for this user” is `events`. “This slice of this day, newest first” cannot use `user_id` as the partition key. A partition key of `day` alone collects the whole day onto one replica set. Add a **bucket** (in production, `hash(user_id) % N`). Include `user_id` in the clustering key so two events at the same timestamp both survive.
+Joins are not how this database serves operational reads. If you need “by user” and “by day,” you keep two tables and duplicate the columns each query must return. One application write fans out to both, in the request path or in a pipeline. Correctness of that pair is the application’s job. The database will not notice that one of the writes failed.
+
+“Events for this user” is `events`. “This slice of this day, newest first” cannot use `user_id` as the partition key. A partition key of `day` alone collects the whole day onto one replica set. Add a **bucket** (in production, `hash(user_id) % N`). Include `user_id` in the clustering key so two events at the same timestamp both survive. The duplication costs disk and discipline. It buys a partition-local read for each pattern. A DSE Search index is not a stand-in for the second table.
 
 ```sql
 CREATE TABLE IF NOT EXISTS events_by_day (
@@ -130,6 +130,14 @@ LIMIT 20;
 
 **About 25 minutes.**
 
+Convenience becomes a full-cluster read, or a contended partition.
+
+A **secondary index** is distributed, with a catch. The classic form is tolerable for a narrow, low-cardinality case, or a query that is already scoped. “Find this email anywhere in the database” on a high-cardinality column fans out to many nodes. The fix for a primary lookup is a table whose partition key is that lookup. **Storage-attached indexes** (SAI) are the newer form: default `CREATE INDEX` on Cassandra 5, and available in DSE. They avoid a lot of the coordinator fan-out of the classic index. They are still not a substitute for a key you know before you query. This lab does not create one.
+
+**`ALLOW FILTERING`** tells the coordinator it may scan to satisfy a predicate that is not the partition key. On a large table that scan is the partition, or the cluster. If the statement needs it, the schema is wrong for that query.
+
+A **lightweight transaction** (`IF`, `IF NOT EXISTS`) is a linearizable compare-and-set. Cassandra runs it as a Paxos-style round, several network trips, on the order of four times a normal write. It is the right tool for a narrow conditional update. It is the wrong tool for keeping two denormalized tables aligned, and it is a latency trap when the same partition takes a stream of them. Prefer an idempotent write and a partition key that spreads the work. Cassandra 5 adds **Accord** for multi-partition transactions. That is a separate write path from ordinary inserts and from single-partition LWT. It does not make filtering, an unbounded partition, or a careless driver cheap. This course does not lab Accord.
+
 ```sql
 SELECT * FROM events WHERE payload = 'dual-write';
 ```
@@ -142,11 +150,13 @@ SELECT * FROM events WHERE payload = 'dual-write' ALLOW FILTERING;
 
 This can succeed here because the table is tiny. On a real table it is a scatter-gather. Shipping it means the access pattern never got a table.
 
-Do **not** “fix” it with `CREATE INDEX ON events (payload)` as the hot path. A classic secondary index fans out across nodes. Storage-attached indexes (SAI), the default index form in Cassandra 5 and available in DSE, are more efficient and still are not a substitute for a partition key you know in advance. If the lookup is primary, build `events_by_payload` or an equivalent key. Details: [data-modeling/06](../data-modeling/06-anti-patterns.md).
+Do **not** “fix” it with `CREATE INDEX ON events (payload)` as the hot path. A classic secondary index fans out across nodes. Storage-attached indexes (SAI), the default index form in Cassandra 5 and available in DSE, are more efficient and still are not a substitute for a partition key you know in advance. If the lookup is primary, build `events_by_payload` or an equivalent key.
 
 ![Anti-patterns](../assets/modeling-anti-patterns.png)
 
-**LWT, one compare-and-set.** Skip if the clock slipped. Linearizable `IF` uses a Paxos round (several round-trips, contention on a hot partition). Idempotent writes and a good partition key come first.
+**LWT, one compare-and-set.** Skip if the clock slipped. The rounds are the picture. The legitimate use in this course is the narrow conditional write below, not a transaction around `events` and `events_by_day`.
+
+![LWT and Paxos](../assets/architecture-lwt-paxos.png)
 
 ```sql
 CREATE TABLE IF NOT EXISTS dm_lwt_demo (
@@ -198,7 +208,7 @@ The script inserts one row at `LOCAL_QUORUM` and reads it back. Read [`labs/driv
 
 ## Close
 
-Pre-flight, from [data-modeling/07](../data-modeling/07-checklist-labs-and-blueprint.md), answered for `events` and `events_by_day`:
+Pre-flight, answered for `events` and `events_by_day`:
 
 1. What is the exact CQL for each hot path?
 2. Is every read partition-scoped?
@@ -206,4 +216,4 @@ Pre-flight, from [data-modeling/07](../data-modeling/07-checklist-labs-and-bluep
 4. Where is TTL or delete churn, and who pays for the tombstones?
 5. What did the driver set for local DC and consistency?
 
-**Not this session:** Accord transactions, SAI syntax drills, repair, multi-DC failover, a DSE cluster.
+**Not this session:** an Accord lab, SAI syntax drills, repair, multi-DC failover, a DSE cluster. The reasons are in the sections above.

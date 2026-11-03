@@ -11,10 +11,10 @@ Labs run on the open-source Compose cluster. **DSE is explained in session 1 and
 
 ## How to run the room
 
-- Teach from the session file in front of you. The agenda is the clock.
+- The slide deck is [slides/cassandra-data-labs.pptx](../slides/cassandra-data-labs.pptx). Import it into Google Slides ([how](../slides/README.md)). Speaker notes match these session files.
+- Teach from the session file in front of you. The explanation and the lab are both in that file. The agenda is the clock.
 - Labs sit **inside** the block they illustrate. Do not save them for a lab hour at the end.
-- Each session names one cut if you are behind. Take that cut before you drop a lab that the next session needs.
-- Reference modules ([`architecture/`](../architecture/README.md), [`data-modeling/`](../data-modeling/README.md)) hold extra labs (full repair, compaction stats, capstone repeats). They are not a fifth and sixth session.
+- Each session names one cut if you are behind. Take that cut before you drop a lab the next session needs.
 
 ## Cluster
 

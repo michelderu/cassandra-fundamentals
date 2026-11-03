@@ -19,9 +19,9 @@ This repo is a **four-session course** (2 hours each) on one **three-node** open
 | **2 — Application developer** | 3 — Query-driven design | Developers, architects, tech leads | [sessions/03-query-driven-design.md](sessions/03-query-driven-design.md) |
 | **2 — Application developer** | 4 — CQL, drivers, tombstones, TTL | Same | [sessions/04-cql-drivers-performance.md](sessions/04-cql-drivers-performance.md) |
 
-Index: [sessions/README.md](sessions/README.md).
+Index: [sessions/README.md](sessions/README.md). Slide deck: [slides/cassandra-data-labs.pptx](slides/cassandra-data-labs.pptx) — import into Google Slides with [slides/README.md](slides/README.md).
 
-[`architecture/`](architecture/README.md) and [`data-modeling/`](data-modeling/README.md) are the **reference library** (extra labs and the diagrams). Teach from `sessions/`. Open a reference module only when a session points at it.
+Follow the four session files in order, and the deck with them. Each session holds the explanation and the lab for those two hours. `architecture/` and `data-modeling/` are the earlier split of the same material, kept so nothing was thrown away. You do not need them to teach.
 
 ## Start the lab cluster
 
@@ -59,36 +59,6 @@ Wipe lab data:
 ```bash
 docker compose down -v
 ```
-
-## Learning path
-
-### Timed course
-
-Follow [sessions/README.md](sessions/README.md). Each session file has the agenda, the explanation, and the labs for those two hours.
-
-### Architecture (reference)
-
-| Module | File |
-|--------|------|
-| 01 — Architecture and deployment | [01-architecture-and-deployment.md](architecture/01-architecture-and-deployment.md) |
-| 02 — Lab environment | [02-lab-environment.md](architecture/02-lab-environment.md) |
-| 03 — Masterless, peers, placement | [03-masterless-peers-and-placement.md](architecture/03-masterless-peers-and-placement.md) |
-| 04 — CAP and tunable consistency | [04-cap-and-tunable-consistency.md](architecture/04-cap-and-tunable-consistency.md) |
-| 05 — Gossip and topology | [05-gossip-and-topology.md](architecture/05-gossip-and-topology.md) |
-| 06 — Storage engine (write/read, compaction, tombstones) | [06-storage-engine-write-through-read.md](architecture/06-storage-engine-write-through-read.md) |
-| 07 — Self-healing, LWT, summary | [07-self-healing-lwt-and-summary.md](architecture/07-self-healing-lwt-and-summary.md) |
-
-### Data modeling (reference)
-
-| Module | File |
-|--------|------|
-| 01 — Intro and paradigm | [01-intro-and-paradigm.md](data-modeling/01-intro-and-paradigm.md) |
-| 02 — Process and primary key | [02-process-and-primary-key.md](data-modeling/02-process-and-primary-key.md) |
-| 03 — Placement and partition health | [03-placement-and-partition-health.md](data-modeling/03-placement-and-partition-health.md) |
-| 04 — Clustering and wide partitions | [04-clustering-and-wide-partitions.md](data-modeling/04-clustering-and-wide-partitions.md) |
-| 05 — Tombstones and denormalization | [05-tombstones-and-denormalization.md](data-modeling/05-tombstones-and-denormalization.md) |
-| 06 — Anti-patterns | [06-anti-patterns.md](data-modeling/06-anti-patterns.md) |
-| 07 — Checklist, labs, blueprint | [07-checklist-labs-and-blueprint.md](data-modeling/07-checklist-labs-and-blueprint.md) |
 
 ## Prerequisites
 

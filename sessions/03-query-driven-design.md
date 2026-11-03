@@ -6,7 +6,7 @@
 
 **Purpose:** Design tables from access patterns so each production query hits a known partition and that partition stays bounded.
 
-**Requires:** Phase 1 vocabulary (partition, RF, CL, SSTable) and `lab_ks.events` from session 1. If this group did not sit Phase 1, spend the first 15 minutes on [session 1, sections 4 and 5](01-common-foundation.md) and cut the optional clustering-order lab below.
+**Requires:** Phase 1 vocabulary (partition, RF, CL, SSTable) and `lab_ks.events` from session 1. If this group did not sit Phase 1, spend the first 15 minutes on [session 1, sections 4 and 5](01-common-foundation.md) and cut the optional clustering-order lab below. The explanation for this session is in this file.
 
 ## You leave able to
 
@@ -32,24 +32,26 @@
 
 ## 1. The rule
 
-Relational habit: entities, normal forms, indexes, then whatever SQL you need, including joins.
+The masterless, log-structured cluster from the first two sessions only stays fast when the tables match how data is stored: partitions on the ring, append-only writes, a consistency level per statement.
 
-Cassandra habit: list the queries first. Each production query becomes a table (or a materialized path) whose primary key **is** that query. If you cannot write it as equality on the partition key plus an optional range on clustering columns, in order, you do not have a Cassandra query yet.
+A relational design identifies entities, normalizes them to cut redundancy, creates tables, adds indexes, and then runs whatever SQL the question needs, including joins. The win is storage efficiency and flexible querying. At large scale the joins and the central bottlenecks become the constraint.
 
-**Golden rule:** one table per production access pattern.
+Cassandra reverses the order. List the access patterns first. Choose partition keys so each query hits a known partition, or a small bounded set. Define clustering for the order inside that partition. At production scale that is often one table per query. The win is partition-local reads and predictable latency. Duplicating a value is acceptable when it buys that.
+
+**Golden rule:** one table, or one materialized path, per access pattern you need at production scale. If the pattern cannot be written as a known partition key plus an optional range on the clustering columns, in order, you are still thinking in rows and joins. You need another table, a different key, or a different store.
 
 ![Relational vs Cassandra](../assets/modeling-relational-vs-cassandra.png)
-
-Reference: [data-modeling/01](../data-modeling/01-intro-and-paradigm.md). The connectivity lab in that file is session 1; do not repeat it.
 
 ---
 
 ## 2. Four steps, then the key
 
-1. **Access patterns** — frequency, latency, and whether the read must see the latest write (`QUORUM` / `LOCAL_QUORUM` vs `ONE`).
-2. **Partition key** — equality lookup that selects one partition, or a small bounded set of them.
-3. **Clustering columns** — order and uniqueness inside the partition.
-4. **Another table** when a second pattern needs a different partition key. Session 4 writes both tables. Duplication is the design, not a mistake.
+Work in this order. Skipping to a table and hoping indexes will save the second query is the relational habit.
+
+1. **Access patterns.** For each one, write the frequency, the latency budget, and whether the read must see the latest write. That last part is the consistency level from session 2: `LOCAL_QUORUM` or `QUORUM` when it must, `ONE` when it may not.
+2. **Partition key.** The query narrows to one partition, or to a small bounded set. A cluster-wide scan is not a step you accept.
+3. **Clustering columns.** They set row order and uniqueness inside the partition. `event_time DESC` is how “latest first” is stored, not how a query sorts after the fact.
+4. **Another table** when a second pattern needs a different partition key. Session 4 writes both. Duplication is the design. The database will not normalize it back.
 
 ![Four-step process](../assets/modeling-four-step-process.png)
 
@@ -67,9 +69,14 @@ PRIMARY KEY ((user_id, day), event_time)
 
 That is how you stop one user from owning an unbounded partition when history is long. `(day)` alone is the opposite problem: every writer for “today” hits one partition. Session 4’s day table uses `(day, bucket)` for that reason.
 
-![Primary key structure](../assets/modeling-primary-key-structure.png)
+The primary key has two jobs, and they are not the same job.
 
-Reference: [data-modeling/02](../data-modeling/02-process-and-primary-key.md).
+- The **partition key** is hashed to a token. That token decides which replicas store the partition. Every row with that partition key lives in one partition on disk. A single column is a simple partition key: `PRIMARY KEY (user_id, event_time)`. Several columns in an extra pair of parentheses are one composite partition key: `PRIMARY KEY ((user_id, day), event_time)`. All of those columns are hashed together.
+- The **clustering columns** follow the partition key. They sort the rows on disk, ascending unless `CLUSTERING ORDER BY` says otherwise, and they make each row unique inside the partition.
+
+Partitioning answers where the data lives in the cluster. Clustering answers the order inside that one partition. The poster draws extra parentheses around `user_id`. The table you created does not need them. The parentheses matter when more than one column is the partition key.
+
+![Primary key structure](../assets/modeling-primary-key-structure.png)
 
 ---
 
@@ -114,13 +121,17 @@ WHERE user_id = 123e4567-e89b-12d3-a456-4266141740bb
 
 ## 4. Hot partitions and wide partitions
 
-Placement follows the partition key. RF and CL do not spread a bad key. A **hot** partition is one key that takes a disproportionate share of operations; its replicas run hot and the rest of the cluster looks idle. A **wide** partition is one key with a huge number of rows or a huge payload; reads, repair, and compaction all suffer.
+The partition key is hashed to a token, and that token selects the replicas. You already saw the endpoints in session 1. The modeling consequence is blunt: **placement and load follow the partition key.** Raising RF or picking a stricter consistency level does not spread a bad key. Those knobs only change how many of the replicas participate in one operation.
+
+A good key matches a natural query (“this user’s events”) and has enough distinct values that reads and writes spread out. The risky shapes are too few distinct values, and a time-only key on a high-volume stream: everything “current” lands on one partition until the bucket rolls.
+
+A **hot** partition is one key taking a disproportionate share of operations. Its replicas run hot. The rest of the cluster looks idle. A **wide** partition is one key with a huge number of rows or a huge payload. Reads merge more SSTable components. Repair and compaction cover more. Coordinators and replicas spend more heap and more garbage-collection time.
 
 Mitigations you should be able to say:
 
-- **Bucketing** — add a bucket or a time shard to the partition key: `(user_id, day)` or `(day, bucket)`.
-- **TTL** — only when the product may forget the row. Session 4 labs it. Expiry becomes a tombstone, so it is not free.
-- **Cardinality** — “one row per country” or “one partition per current hour for the whole product” will not scale.
+- **Bucketing** — add a bucket or a time shard to the partition key: `(user_id, day)` when one user is huge, or `(day, bucket)` when the query is “this day.” A bare `day` is the hot key, not the fix.
+- **TTL** — only when the product may forget the row. Session 4 labs it. Expiry becomes a tombstone, so it is not free, and expiring a whole partition at once schedules a delete storm.
+- **Cardinality** — “one row per country” or “one partition per current hour for the whole product” will not scale. Model the volume you will actually have. Unbounded growth under one key is a design bug unless you have measured otherwise.
 
 ![Token ring](../assets/modeling-partition-token-ring.png)
 
@@ -131,8 +142,6 @@ Mitigations you should be able to say:
 ![Wide partitions](../assets/modeling-wide-partitions.png)
 
 Clustering supports `=`, `>`, `<`, and `BETWEEN` in primary-key order. It does not sort by an arbitrary column at read time.
-
-Reference: [data-modeling/03](../data-modeling/03-placement-and-partition-health.md), [data-modeling/04](../data-modeling/04-clustering-and-wide-partitions.md).
 
 ---
 
@@ -183,6 +192,6 @@ A passing answer restricts `user_id` with equality. Latest-first needs `CLUSTERI
 
 ## Close
 
-**Next:** [session 4](04-cql-drivers-performance.md) — the second table, tombstones, TTL, the driver, and the queries you must not ship.
+**Next:** [Session 4](04-cql-drivers-performance.md) — the second table, tombstones, TTL, the driver, and the queries you must not ship.
 
-**Not this session:** `ALLOW FILTERING`, index creation, dual writes, Python. The checklist in [data-modeling/07](../data-modeling/07-checklist-labs-and-blueprint.md) is the take-home, not another lab hour.
+**Not this session:** `ALLOW FILTERING`, index creation, dual writes, Python. The paper check above is the close.

@@ -6,7 +6,7 @@
 
 **Purpose:** A shared picture of Cassandra and of DSE, then proof on a cluster that any node can coordinate and that a partition key chooses the replicas.
 
-**Cluster:** open-source Cassandra in Docker Compose. DSE is discussion only.
+**Cluster:** open-source Cassandra in Docker Compose. DSE is discussion only. The explanation for this session is in this file.
 
 ## You leave able to
 
@@ -31,15 +31,31 @@
 
 ## 1. What Cassandra is for
 
-Cassandra is an operational store for live reads and writes at high throughput, with no master and with a consistency level chosen per request. Typical fits: events, time series, catalogs, sessions, messaging metadata, IoT ingest.
+Words the rest of the course uses without stopping:
+
+| Term | Meaning |
+|------|---------|
+| **CQL** | Cassandra Query Language. It looks like SQL and then refuses joins and ad-hoc filters. |
+| **RF** | Replication factor. How many copies of each partition the keyspace stores. |
+| **CL** | Consistency level. How many of those replicas must answer a given read or write. |
+| **DC** | Datacenter. A failure domain the snitch names, and a key in `NetworkTopologyStrategy`. |
+
+Cassandra is an **operational data store** for live applications: predictable latency at large scale. It is not the warehouse. You can export from it into an analytics stack. You do not run the batch questions here. Typical fits: events, time series, catalogs, sessions, messaging metadata, IoT ingest.
+
+| Need | How this design meets it |
+|------|--------------------------|
+| Scale out | Add nodes. There is no single writer to scale up. |
+| Low latency | `LOCAL_QUORUM` or `ONE` trades how many replicas must agree for how fast you return. |
+| High availability | Copies on nodes, racks, and datacenters. A lost node is survived when RF and the consistency level were chosen for that loss. |
+| More than one region | Each datacenter holds its own replicas. `LOCAL_QUORUM` means a quorum **in the coordinator’s datacenter**, so the request does not wait on the other region. |
 
 Poor fits, said plainly:
 
-- Ad-hoc joins across arbitrary tables.
-- Multi-key transactions as the default way to model the domain. Single-partition compare-and-set (LWT) exists; it is not a SQL transaction habit. Session 4 shows one.
+- Rich ad-hoc joins. The model is query-first and denormalized. Sessions 3 and 4 are that model.
+- Multi-key serializable transactions as the default way to write the domain. A lightweight transaction is a compare-and-set on one partition. Session 4 shows one, and why it is not a SQL habit.
 - A small dataset with no availability requirement. A single-node SQL database is simpler.
 
-Deeper narrative and the terms table: [architecture/01](../architecture/01-architecture-and-deployment.md).
+Session 2 is the internals underneath this: placement, gossip, the log-structured storage engine, repair. That picture is the same on open-source Cassandra and on DSE. What changes is who runs the nodes, and which extra products share them.
 
 ---
 
@@ -57,25 +73,33 @@ Same CQL, same drivers, same partition rules. The difference is who runs the nod
 
 A correct schema and a correct driver configuration from this course are the right ones for DSE contact points. Nothing in the labs requires an OpsCenter UI or a Search index.
 
-**HCD.** DataStax’s Kubernetes-native platform, still operated by you, on-prem or in your cloud account.
+**HCD.** DataStax’s self-managed, Kubernetes-native platform, on-premises or in your cloud account. You still operate the stack. You are buying supported packaging and operational tooling (Mission Control in that ecosystem) where a fully vendor-hosted database plane is not allowed: regulated industries, hybrid cloud, data-residency rules. Licensing and support come with that packaging.
 
-**Astra DB.** DataStax-operated Cassandra-compatible service. Less control of topology; less cluster work for the team.
+**Astra DB.** DataStax-operated Cassandra-compatible database-as-a-service on the major public clouds. Provisioning, patching, scaling, and the SLA are largely theirs. You give up low-level topology. You gain a shorter path to a CQL endpoint. Region choice and price follow the service.
 
 | | OSS (labs) | DSE | HCD | Astra |
 |--|------------|-----|-----|-------|
 | Who operates | You | You, with a vendor build | You, supported platform | DataStax |
+| Where | Your machines | Your machines or clusters | Often on-prem or your cloud | DataStax cloud |
 | Extra products | None | Search, Analytics, Graph, ops tooling | Platform features | Managed service |
+| Best when | Full control of the binary | Supported Cassandra on infrastructure you run | Self-managed Kubernetes | Fastest path to managed CQL |
 | In this room | Every lab | Talk only | Talk only | Talk only |
 
 **Check for the room (2 minutes, no cluster):** From a status page, which facts are plain Cassandra (`UN`, load, tokens) and which appear only because the estate bought DSE (OpsCenter repair service, a Search core, a Spark worker on the Cassandra nodes)?
-
-Full write-up: [architecture/01 — deployment options](../architecture/01-architecture-and-deployment.md).
 
 ---
 
 ## 3. Lab — cluster and schema
 
-**About 35 minutes.** From the repository root. Runtime notes: [architecture/02](../architecture/02-lab-environment.md).
+**About 35 minutes.** From the repository root.
+
+The lab needs a Docker-compatible CLI (`docker` and `docker compose`). Docker Engine on Linux is the baseline. Docker Desktop is the usual macOS and Windows path, and some companies ban it. Podman (rootless; on a Mac or Windows it runs inside Podman Machine) and Colima (a small VM plus the Docker CLI) are the substitutes. If the CLI is `podman` rather than `docker`, either type `podman compose` where this file says `docker compose`, or for this shell only:
+
+```bash
+docker() { podman "$@"; }
+```
+
+Colima, when that is the chosen VM: `colima start --cpu 4 --memory 6`, then `docker context use colima` if the CLI is not talking to it. One runtime is enough. The commands below do not change.
 
 ```bash
 docker compose up -d
@@ -127,17 +151,25 @@ Leave `cqlsh` open if you can. Exit with `exit` when you need the host shell.
 
 ## 4. Masterless ring
 
-No node is the writer for the cluster. Every node can coordinate a request. The partition key is hashed onto a token ring; vnodes give each machine many small ranges so membership changes move less data. Replication walks the ring from that token and picks RF distinct replicas, respecting the snitch’s racks and DCs when the strategy is NTS.
+No node is special. There is no primary and no metadata master the cluster depends on. Every node can coordinate a request and can serve the data it owns. If one node fails, the others keep serving. You grow capacity by adding machines, not by replacing one bigger master.
+
+On each node the storage is local: a commit log, memtables, SSTables. Those are files and memory, not roles. Role-wise the nodes are peers. They stay in agreement through replication and through gossip, which session 2 opens up. Consistency is chosen per operation, not granted by “the” writer.
 
 ![Masterless architecture](../assets/architecture-masterless.png)
 
+A master/slave design funnels writes through one machine. That machine is the throughput ceiling and a single failure. Here every node accepts reads and writes. More nodes can mean more aggregate throughput, when the data model allows it. You scale out on ordinary servers, or on Kubernetes, instead of scaling one box up.
+
 ![Peers vs master/slave](../assets/architecture-peers-vs-master-slave.png)
+
+Placement uses the partition key, nothing else:
+
+- The key is hashed to a token on the ring.
+- **Vnodes** give each physical machine many small token ranges instead of one big slice, so a node joining or leaving moves less data.
+- Replication then picks RF distinct owners walking the ring from that token. `SimpleStrategy` only has a count, so it ignores racks and datacenters. `NetworkTopologyStrategy` has a count **per datacenter name**. Those names are whatever the snitch reports for the nodes. In this lab the snitch reports `datacenter1`, and the keyspace asks for 3 replicas there. If the strings differ, the replicas are not placed.
 
 ![Consistent hashing and vNodes](../assets/architecture-consistent-hashing-vnodes.png)
 
-On DSE the ring works the same way. Search and Analytics do not replace the partition key.
-
-Reference: [architecture/03](../architecture/03-masterless-peers-and-placement.md).
+On DSE the ring works the same way. Search and Analytics do not replace the partition key. Think token ranges, RF, and consistency level. There is no primary for all writes.
 
 ---
 
@@ -186,8 +218,8 @@ Note the name and the partitioner (`Murmur3Partitioner`). Token math can wait.
 
 ## Close
 
-One sentence from each role is enough: a developer names the partition key, a platform engineer names NTS and the DC, an SRE names “no master, RF 3”, support names `UN` and `getendpoints`.
+One sentence from each role is enough: a developer names the partition key, a platform engineer names the datacenter in the keyspace (`datacenter1`, the name the snitch reports), an SRE names “no master, RF 3”, support names `UN` and `getendpoints`.
 
-**Next session:** consistency levels, gossip, the storage engine, and one node stopped on purpose. Leave the cluster up (`docker compose stop` only if the room must reboot).
+**Next:** [Session 2](02-consistency-topology-storage.md). Leave the cluster up (`docker compose stop` only if the room must reboot).
 
 **Not this session:** schema design beyond `events`, drivers, TTL, repair, OpsCenter.
