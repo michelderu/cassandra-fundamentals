@@ -10,16 +10,63 @@ People use Cassandra as an **operational data store** for live workloads—time 
 
 ## This repository
 
-This repo is **hands-on training** in two parts:
+This repo is a **four-session course** (2 hours each) on one **three-node** open-source Cassandra cluster ([`docker-compose.yml`](docker-compose.yml)). **DSE is explained, not labbed.** The same CQL, drivers, and data model apply when the contact points are DSE nodes.
 
-1. **Architecture** — You run a **three-node** cluster (Docker Compose) and work through **internals and operations** in [`architecture/`](architecture/README.md): placement, consistency, gossip, the storage engine, and repairs / LWT.
-2. **Data modeling** — A **seven-module** track in [`data-modeling/`](data-modeling/README.md) teaches **query-first** schema design: partition keys, clustering, denormalization, and anti-patterns. It includes **hands-on labs in each module** on the **same Docker Compose cluster** ([`docker-compose.yml`](docker-compose.yml)). Create `lab_ks` / `events` per [architecture/02-lab-environment.md](architecture/02-lab-environment.md) before module **02**.
+| Phase | Session | Who | File |
+|-------|---------|-----|------|
+| **1 — Common foundation** | 1 — What it is, where data lives | Developers, platform, SRE, support | [sessions/01-common-foundation.md](sessions/01-common-foundation.md) |
+| **1 — Common foundation** | 2 — Consistency, topology, storage | Same | [sessions/02-consistency-topology-storage.md](sessions/02-consistency-topology-storage.md) |
+| **2 — Application developer** | 3 — Query-driven design | Developers, architects, tech leads | [sessions/03-query-driven-design.md](sessions/03-query-driven-design.md) |
+| **2 — Application developer** | 4 — CQL, drivers, tombstones, TTL | Same | [sessions/04-cql-drivers-performance.md](sessions/04-cql-drivers-performance.md) |
 
-You can complete **architecture** first, then **data modeling**, or jump to data modeling if you already run Cassandra—still use Compose and [module 02](architecture/02-lab-environment.md) for the shared schema before the hands-on exercises.
+Index: [sessions/README.md](sessions/README.md).
+
+[`architecture/`](architecture/README.md) and [`data-modeling/`](data-modeling/README.md) are the **reference library** (extra labs and the diagrams). Teach from `sessions/`. Open a reference module only when a session points at it.
+
+## Start the lab cluster
+
+From the repository root, with Docker Compose v2:
+
+```bash
+docker compose up -d
+docker exec cassandra-1 nodetool status
+```
+
+Wait until all three nodes show **UN**, then:
+
+```bash
+docker exec -it cassandra-1 cqlsh cassandra-1 9042
+```
+
+Create `lab_ks` and `events` in [session 1](sessions/01-common-foundation.md). Later sessions assume that schema.
+
+## Stop and reset
+
+Stop and keep data:
+
+```bash
+docker compose stop
+```
+
+Remove containers and keep volumes:
+
+```bash
+docker compose down
+```
+
+Wipe lab data:
+
+```bash
+docker compose down -v
+```
 
 ## Learning path
 
-### Architecture (cluster labs)
+### Timed course
+
+Follow [sessions/README.md](sessions/README.md). Each session file has the agenda, the explanation, and the labs for those two hours.
+
+### Architecture (reference)
 
 | Module | File |
 |--------|------|
@@ -31,7 +78,7 @@ You can complete **architecture** first, then **data modeling**, or jump to data
 | 06 — Storage engine (write/read, compaction, tombstones) | [06-storage-engine-write-through-read.md](architecture/06-storage-engine-write-through-read.md) |
 | 07 — Self-healing, LWT, summary | [07-self-healing-lwt-and-summary.md](architecture/07-self-healing-lwt-and-summary.md) |
 
-### Data modeling (CQL labs)
+### Data modeling (reference)
 
 | Module | File |
 |--------|------|
@@ -46,7 +93,7 @@ You can complete **architecture** first, then **data modeling**, or jump to data
 ## Prerequisites
 
 - Docker Desktop or Docker Engine **with Compose v2**
-- About **4 GB** free RAM for the stack (heap capped at 512 MB per node in `docker-compose.yml`)
+- About **6 GB** free RAM for the stack (`MAX_HEAP_SIZE` is **1G** per node in `docker-compose.yml`; three heaps plus off-heap need more than 4 GB)
 
 ## References
 

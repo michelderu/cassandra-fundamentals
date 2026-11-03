@@ -35,7 +35,7 @@ Topics: **secondary indexes**, **`ALLOW FILTERING`**, **lightweight transactions
 
 **Takeaways:** If the hot query needs a column, that column usually belongs in a **primary key** or a **dedicated denormalized table**, not behind an index + filter as the main path.
 
-> **Note:** While Cassandra has historically offered only eventual and timeline consistency (using LWTs for strongly consistent updates), **Cassandra 6** (in preview as of 2024) introduces full **ACID transactional support** via the new **Accord** protocol. Accord brings true distributed transactions—atomic, consistent, isolated, and durable—directly to Cassandra, allowing multi-row and multi-partition transactions with strong guarantees. This fundamental change will unlock more flexible modeling and application patterns, reducing the need for workarounds formerly required for transactional workloads.
+> **Note:** Cassandra **5** adds **Accord** transactions for multi-partition ACID work. They are a separate write path from ordinary inserts and from single-partition LWT. They do not make `ALLOW FILTERING`, unbounded partitions, or driver-unfriendly schemas cheap. This course does not lab Accord.
 
 ---
 

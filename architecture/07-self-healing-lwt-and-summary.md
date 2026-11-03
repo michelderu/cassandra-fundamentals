@@ -79,7 +79,7 @@ Topics: **hinted handoff**, **read repair**, **anti-entropy repair**, **lightwei
    VALUES (uuid(), toTimestamp(now()), 'hints-lab-2');
    ```
 
-   Run **several** inserts with different `user_id` values so at least one partition lists the stopped node among its replicas (RF=3; not every key uses the same three nodes). If the hints directory stays empty, add a few more rows.
+   With **RF = 3** on **three nodes**, every partition includes `cassandra-3`. A write coordinated by `cassandra-1` at `ONE` should store a **hint for that down replica** on the coordinator. If the hints directory stays empty, the failure detector may not have marked the node down yet — wait and insert again. Hint **replay** after the node returns can take a minute; an empty directory immediately after restart is normal.
 
 3. **List hint storage** on the coordinator you used for cqlsh (here `cassandra-1`). Hints live under **`/var/lib/cassandra/hints/`** (subfolders/files are often named by **destination** identity—exact layout varies by version):
 
@@ -95,7 +95,7 @@ Topics: **hinted handoff**, **read repair**, **anti-entropy repair**, **lightwei
    docker exec cassandra-1 nodetool status
    ```
 
-5. **List hint storage** again. The folder should be empty now.
+5. **List hint storage** again. After replay the folder is empty. Give it a minute before treating a leftover file as a failure.
 
    ```bash
    docker exec cassandra-1 sh -c 'ls -la /var/lib/cassandra/hints/'
@@ -114,13 +114,13 @@ docker exec cassandra-1 nodetool netstats
 
 ## Lab B — Repair (small scope)
 
-**Warning:** Full cluster repair is heavy. For training, **primary range repair on one node** after you understand ops impact:
+**Warning:** Full cluster repair is heavy. For training, run **primary-range repair** on one node (`-pr`): that node streams only the ranges it owns as a primary replica.
 
 ```bash
-docker exec cassandra-1 nodetool repair lab_ks --full
+docker exec cassandra-1 nodetool repair -pr lab_ks
 ```
 
-On large data this is slow; with the tiny lab dataset it should finish quickly.
+On large data this is slow; with the tiny lab dataset it should finish quickly. The timed course (session 2) **names** repair and does not run it — use this lab only as follow-up.
 
 **Deliverable:** Paste exit code / final line from repair, or summarize “completed without error.”
 

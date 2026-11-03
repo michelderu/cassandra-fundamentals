@@ -34,7 +34,7 @@ Topics: **gossip protocol**, **snitches**, **multi-DC ideas** (this lab stays **
 
 **Multi-DC:** Replication across a **WAN** is often **asynchronous**; **NetworkTopologyStrategy** sets **per-DC** replica counts. Clients often use **`LOCAL_*`** CLs (e.g. `LOCAL_QUORUM` = quorum **only** among replicas in the **coordinator’s DC**) to avoid cross-region latency on every request.
 
-This Compose lab uses **one DC** and `SimpleStrategy` for simplicity; production multi-DC would switch strategy + snitch.
+This Compose lab uses **one DC** (`datacenter1`), **`GossipingPropertyFileSnitch`**, and **`NetworkTopologyStrategy`** with `'datacenter1': 3`. Production multi-DC keeps that snitch and adds a replica count per datacenter. `SimpleStrategy` does not place replicas by rack or DC.
 
 ![Topology and multi-DC](../assets/architecture-topology-multi-dc.png)
 
@@ -72,7 +72,7 @@ docker exec cassandra-1 nodetool describecluster
 docker exec cassandra-1 cat /etc/cassandra/cassandra.yaml | grep -E '^endpoint_snitch|^# endpoint'
 ```
 
-**Deliverable:** Which snitch is configured? Why is **SimpleSnitch** enough for this single-site lab but not for multi-DC production?
+**Deliverable:** Which snitch is configured? This lab is a single datacenter. Why do you still want `GossipingPropertyFileSnitch` plus `NetworkTopologyStrategy`, rather than `SimpleSnitch` and `SimpleStrategy`, before the cluster ever gains a second datacenter?
 
 ---
 

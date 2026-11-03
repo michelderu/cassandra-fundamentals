@@ -1,6 +1,6 @@
 # Architecture (cluster labs)
 
-Work through **01–07** in order on the same Docker Compose cluster. These modules cover **Cassandra internals and operations**: topology, replication and consistency, gossip, the storage engine, and repairs / lightweight transactions.
+The timed class for this material is **Phase 1** in [`sessions/`](../sessions/README.md): session 1 (architecture, DSE explained, placement) and session 2 (consistency, gossip, storage, a failure lab). Modules **01–07** are the longer reference on the same Docker Compose cluster: topology, replication and consistency, gossip, the storage engine, and repairs / lightweight transactions. DSE is explained in [01](01-architecture-and-deployment.md). There is no DSE lab.
 
 | # | File | Focus |
 |---|------|--------|

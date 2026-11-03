@@ -89,7 +89,7 @@ SELECT * FROM events WHERE payload = 'some-payload' ALLOW FILTERING;
 
 You need “recent events across **all** users for a **given day**,” sorted by time. The existing `events` table is keyed by `user_id`, so it does **not** efficiently answer “all users, one day.”
 
-If you already created `events_by_day` in [module 05 Lab B](05-tombstones-and-denormalization.md#lab-b--denormalized-table--dual-write), **query it** by `day` and document how you would **bucket further** if a single day’s partition became too hot. Otherwise, **create** the table below and insert a few rows.
+If you already created `events_by_day` in [module 05 Lab B](05-tombstones-and-denormalization.md#lab-b--denormalized-table--dual-write), **query it** by `day` and `bucket`. Otherwise, **create** the table below and insert a few rows. The bucket exists so one calendar day is not a single hot partition.
 
 **Deliverable:** Propose or refine a **second table**’s `PRIMARY KEY` (and clustering order) so one query reads **one** (or a few) partitions. Note that the app must **write to both** tables (or an equivalent pipeline) and how you avoid an **unbounded** hot partition if a bucket is still too large.
 
@@ -98,11 +98,12 @@ Example shape (illustrative):
 ```sql
 CREATE TABLE IF NOT EXISTS events_by_day (
   day text,
+  bucket int,
   event_time timestamp,
   user_id uuid,
   payload text,
-  PRIMARY KEY (day, event_time)
-) WITH CLUSTERING ORDER BY (event_time DESC);
+  PRIMARY KEY ((day, bucket), event_time, user_id)
+) WITH CLUSTERING ORDER BY (event_time DESC, user_id ASC);
 ```
 
 ---

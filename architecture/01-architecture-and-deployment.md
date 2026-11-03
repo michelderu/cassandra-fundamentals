@@ -42,15 +42,28 @@ The rest of this course dives into **Apache Cassandra** internals: partitions, r
 
 ---
 
-## Deployment options: Apache Cassandra, DataStax HCD, and Astra DB
+## Deployment options: Apache Cassandra, DSE, HCD, and Astra DB
 
-All three are rooted in **Apache Cassandra compatibility** (CQL, drivers, partition-oriented modeling), but **who runs the infrastructure** and **where** it runs differ.
+These options share **Apache Cassandra compatibility** (CQL, drivers, partition-oriented modeling). **Who runs the infrastructure**, **where** it runs, and **which extra features** you get are what differ. The labs in this course run **open-source Cassandra** only. DSE is explained here and is not a lab target.
 
 ### Apache Cassandra (open source)
 
 - **What it is:** Community **Apache Cassandra** releases that you install and operate yourself (bare metal, VMs, or your own Kubernetes).
 - **Fit:** Teams that want **maximum control**, custom images, direct access to configs and upgrades, and no vendor lock-in for the binary.
 - **Tradeoffs:** **You** own monitoring, backups, upgrades, security patching, and capacity planning.
+- **This course:** every hands-on lab uses this distribution, via Docker Compose.
+
+### DataStax Enterprise (DSE)
+
+- **What it is:** DataStax’s **supported distribution** of Cassandra, run on **infrastructure you operate** (VMs or Kubernetes). The widely deployed line is **DSE 6.8 / 6.9**, built on a **Cassandra 4.x** core. The ring, replication factor, consistency levels, CQL, drivers, and LSM storage engine are the **same model** as open source. A schema and a driver configuration that are correct here stay correct against DSE contact points.
+- **What you are buying beyond the database:** a vendor build and support lifecycle, plus features open-source Cassandra does not include. Depending on version and which components are enabled:
+  - **Operations:** OpsCenter and Lifecycle Manager (repair service, backup, metrics). Newer DataStax operations planes use **Mission Control**.
+  - **Security packaging:** authentication, role-based authorization, client-to-node and node-to-node encryption, often integrated with LDAP or Kerberos.
+  - **Integrated workloads on the same cluster:** **DSE Search** (Solr), **DSE Analytics** (Spark), and **DSE Graph**. These are not separate products you model around in CQL; they **share node capacity** with the transactional workload, so capacity planning is part of the architecture.
+  - **Other versioned extras:** advanced replication, in-memory tables, tiered storage.
+- **Fit:** Existing enterprise estates that already run DSE, or policies that require a supported Cassandra distribution on hardware the company controls.
+- **Tradeoffs:** You still operate the cluster. Search, analytics, and graph change node sizing and failure behavior. Those components are **out of scope for the labs** — know they exist so a DSE cluster does not get treated as “plain Cassandra plus a logo.”
+- **This course:** explanation only. No OpsCenter, Search, Analytics, or Graph exercises.
 
 ### DataStax Hyper-Converged Database (HCD)
 
@@ -66,11 +79,13 @@ All three are rooted in **Apache Cassandra compatibility** (CQL, drivers, partit
 
 ### Summary comparison
 
-| Dimension | OSS Cassandra | DataStax HCD (typical) | Astra DB (typical) |
-|-----------|----------------|-------------------------|---------------------|
-| **Operations** | Your team | Your team (supported stack) | Vendor-managed service |
-| **Where it runs** | Your choice | Often on-prem / your cloud | DataStax-managed cloud |
-| **Best when** | Full DIY control | Self-managed + enterprise support | Fastest path to managed CQL |
+| Dimension | OSS Cassandra | DSE (typical) | DataStax HCD (typical) | Astra DB (typical) |
+|-----------|----------------|---------------|-------------------------|---------------------|
+| **Operations** | Your team | Your team, vendor build and tools | Your team (supported stack) | Vendor-managed service |
+| **Where it runs** | Your choice | Your machines or clusters | Often on-prem / your cloud | DataStax-managed cloud |
+| **Beyond the CQL core** | Cassandra itself | Search, Analytics, Graph, OpsCenter (as enabled) | Enterprise platform features | Managed service features |
+| **In this course** | All labs | Explained only | Explained only | Explained only |
+| **Best when** | Full DIY control | Supported Cassandra on infrastructure you run | Self-managed Kubernetes platform | Fastest path to managed CQL |
 
 Check [DataStax documentation](https://docs.datastax.com/) for current HCD and Astra DB capabilities.
 

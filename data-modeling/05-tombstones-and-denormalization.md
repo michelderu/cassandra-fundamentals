@@ -1,6 +1,6 @@
 # 05 — Tombstones, churn, and denormalization
 
-Topics: **deletes as writes**, **tombstones and `gc_grace_seconds`**, **fan-out writes to multiple tables**, **labs: DELETE + `events_by_day`**.
+Topics: **deletes as writes**, **tombstones and `gc_grace_seconds`**, **TTL**, **fan-out writes to multiple tables**, **labs: DELETE, TTL, `events_by_day`**.
 
 **Terms:**
 
@@ -33,7 +33,7 @@ Example pattern:
 | Table | Partition key | Serves |
 |-------|----------------|--------|
 | `events_by_user` | `user_id` | “History for user A.” |
-| `events_by_day` | `date` (or bucket) | “Everything that happened on this day.” |
+| `events_by_day` | `(day, bucket)` | “This slice of one day.” A bare `day` key is one hot partition. |
 
 One application write can **fan out** to both tables in one request path (or via a pipeline). **Correctness** and **update workflows** are **application responsibilities**—the database will not transparently normalize for you.
 
@@ -84,18 +84,44 @@ One application write can **fan out** to both tables in one request path (or via
    ```sql
    CREATE TABLE IF NOT EXISTS events_by_day (
      day text,
+     bucket int,
      event_time timestamp,
      user_id uuid,
      payload text,
-     PRIMARY KEY (day, event_time)
-   ) WITH CLUSTERING ORDER BY (event_time DESC);
+     PRIMARY KEY ((day, bucket), event_time, user_id)
+   ) WITH CLUSTERING ORDER BY (event_time DESC, user_id ASC);
    ```
 
-2. Insert **one** logical event into **both** `events` **and** `events_by_day` (same `user_id`, `event_time`, `payload`; set `day` to a string like `'2025-04-01'` that matches the event’s calendar day).
+2. Insert **one** logical event into **both** `events` **and** `events_by_day` (same `user_id`, `event_time`, `payload`). Set `day` to a string like `'2025-04-01'` and `bucket` to `0` in this lab. Say aloud what a real bucket function would be (hash of `user_id` into `0..N-1`) if that day is large.
 3. Query by user: `SELECT * FROM events WHERE user_id = ...`
-4. Query by day: `SELECT * FROM events_by_day WHERE day = '2025-04-01' LIMIT 20;`
+4. Query one day-slice: `SELECT * FROM events_by_day WHERE day = '2025-04-01' AND bucket = 0 LIMIT 20;`
 
 **Deliverable:** What must a real application do on every write to keep both tables consistent?
+
+---
+
+## Lab C — TTL
+
+**Goal:** See a **time-to-live** on a cell, and connect expiry to tombstones.
+
+TTL is a write-time deadline. When it elapses, Cassandra writes a **tombstone** for that cell; the tombstone then waits out **`gc_grace_seconds`** like any other delete. A table can also set `default_time_to_live`. Prefer TTL for data that is **allowed to disappear** (sessions, caches, expiring events). It does not replace a bounded partition key: a hot partition still fills with live rows and, later, with tombstones.
+
+Use a scratch table so the shared `events` rows stay put.
+
+```sql
+USE lab_ks;
+
+CREATE TABLE IF NOT EXISTS ttl_demo (
+  id text PRIMARY KEY,
+  payload text
+);
+
+INSERT INTO ttl_demo (id, payload) VALUES ('short', 'gone-soon') USING TTL 60;
+
+SELECT id, payload, TTL(payload) FROM ttl_demo WHERE id = 'short';
+```
+
+**Deliverable:** `TTL(payload)` is a countdown in seconds, not “already deleted.” In one sentence, what lands on disk after those 60 seconds, and why reads can still pay for that row during `gc_grace_seconds`?
 
 ---
 

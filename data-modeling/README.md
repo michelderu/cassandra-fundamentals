@@ -1,6 +1,6 @@
 # Data modeling track
 
-Work through this track (**01–07**) after the **architecture** modules (**01–07**), or in parallel once you know the cluster basics. Diagrams live in [`../assets`](../assets) as descriptive PNGs (`modeling-*.png`, e.g. `modeling-blueprint-title.png`, `modeling-partition-token-ring.png`).
+The timed class for this material is **Phase 2** in [`sessions/`](../sessions/README.md): session 3 (query-driven design) and session 4 (CQL, drivers, tombstones, TTL, anti-patterns). Work the modules below when you want the longer reference, after the architecture modules or once the cluster from [session 1](../sessions/01-common-foundation.md) is up. Diagrams live in [`../assets`](../assets) as descriptive PNGs (`modeling-*.png`, e.g. `modeling-blueprint-title.png`, `modeling-partition-token-ring.png`).
 
 ## Lab cluster (Docker Compose)
 
@@ -22,7 +22,7 @@ Work through this track (**01–07**) after the **architecture** modules (**01�
 | [02](02-process-and-primary-key.md) | `DESCRIBE` primary key; insert rows; partition vs clustering. |
 | [03](03-placement-and-partition-health.md) | `nodetool getendpoints` for a partition key. |
 | [04](04-clustering-and-wide-partitions.md) | Range on `event_time`; optional `CLUSTERING ORDER BY` demo table. |
-| [05](05-tombstones-and-denormalization.md) | `DELETE` + read; `events_by_day` + dual write. |
+| [05](05-tombstones-and-denormalization.md) | `DELETE` + read; `USING TTL`; `events_by_day` + dual write. |
 | [06](06-anti-patterns.md) | `ALLOW FILTERING`; optional secondary index; optional LWT. |
 | [07](07-checklist-labs-and-blueprint.md) | Checklist + capstone labs (placement, predicates, denormalization). |
 
@@ -32,7 +32,7 @@ Work through this track (**01–07**) after the **architecture** modules (**01�
 | 02 | [02-process-and-primary-key.md](02-process-and-primary-key.md) | Four-step process; partition vs clustering |
 | 03 | [03-placement-and-partition-health.md](03-placement-and-partition-health.md) | Consistent hashing; `getendpoints`; hot vs even load |
 | 04 | [04-clustering-and-wide-partitions.md](04-clustering-and-wide-partitions.md) | Clustering ranges; wide partition risks |
-| 05 | [05-tombstones-and-denormalization.md](05-tombstones-and-denormalization.md) | Tombstones; fan-out to multiple tables |
+| 05 | [05-tombstones-and-denormalization.md](05-tombstones-and-denormalization.md) | Tombstones; TTL; fan-out to multiple tables |
 | 06 | [06-anti-patterns.md](06-anti-patterns.md) | Secondary indexes; `ALLOW FILTERING`; LWT |
 | 07 | [07-checklist-labs-and-blueprint.md](07-checklist-labs-and-blueprint.md) | Checklist; blueprint; capstone labs |
 

@@ -85,7 +85,7 @@ docker compose up -d
 docker exec cassandra-1 nodetool status
 ```
 
-**Prerequisites:** A Docker-compatible runtime with Compose support, plus ~4 GB RAM free. See the [repository README](../README.md).
+**Prerequisites:** A Docker-compatible runtime with Compose support, plus ~6 GB RAM free (`MAX_HEAP_SIZE` is 1G per node). See the [repository README](../README.md).
 
 ---
 
@@ -134,29 +134,6 @@ In **cqlsh**, run:
 ```sql
 CREATE KEYSPACE IF NOT EXISTS lab_ks
   WITH replication = {
-    'class': 'SimpleStrategy',
-    'replication_factor': 3
-  };
-
-USE lab_ks;
-
-CREATE TABLE IF NOT EXISTS events (
-  user_id uuid,
-  event_time timestamp,
-  payload text,
-  PRIMARY KEY (user_id, event_time)
-) WITH compaction = {
-  'class': 'SizeTieredCompactionStrategy'
-};
-```
-
-If your server rejects `SimpleStrategy`, drop and recreate the keyspace using `NetworkTopologyStrategy` with the datacenter name from `nodetool status` (often `datacenter1`):
-
-```sql
-DROP KEYSPACE IF EXISTS lab_ks;
-
-CREATE KEYSPACE lab_ks
-  WITH replication = {
     'class': 'NetworkTopologyStrategy',
     'datacenter1': 3
   };
@@ -173,9 +150,9 @@ CREATE TABLE IF NOT EXISTS events (
 };
 ```
 
-**Why `SimpleStrategy` here:** Single logical datacenter in this lab; three replicas, one per node.
+**Why `NetworkTopologyStrategy` here:** Compose sets `GossipingPropertyFileSnitch` and a single datacenter, `datacenter1`. NTS stores three replicas in that DC (one per node). `SimpleStrategy` ignores datacenter and rack boundaries — fine for a toy, wrong habit for anything that will gain a second DC. If `lab_ks` already exists with `SimpleStrategy`, `DROP KEYSPACE lab_ks;` and run the statement above.
 
-**Deliverable:** `DESCRIBE KEYSPACE lab_ks;` shows `replication_factor: 3` (SimpleStrategy) or `datacenter1: 3` (NetworkTopologyStrategy).
+**Deliverable:** `DESCRIBE KEYSPACE lab_ks;` shows `datacenter1: 3`.
 
 ---
 
